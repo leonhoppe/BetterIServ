@@ -1,0 +1,24 @@
+.card-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ion-card {
+    width: 90%;
+
+    ion-card-content {
+      display: flex;
+      flex-direction: column;
+
+      ion-input {
+        margin-block: 15px;
+      }
+
+      ion-button {
+        flex-grow: 0;
+        margin-inline: auto;
+      }
+    }
+  }
+}

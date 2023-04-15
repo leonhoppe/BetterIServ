@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import {IServService} from "./Api/iserv.service";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -10,14 +11,26 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule, RouterLink, RouterLinkActive, CommonModule],
 })
 export class AppComponent {
+
   public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    { title: 'Übersicht', url: '/home', icon: 'home' },
+    { title: 'E-Mail', url: '/email', icon: 'mail' },
+    { title: 'Dateien', url: '/files', icon: 'folder' },
+    { title: 'Aufgaben', url: '/tasks', icon: 'clipboard' },
+    { title: 'Stundenplan', url: '/schedule', icon: 'grid' },
+    { title: 'Vertretungsplan', url: '/substitution', icon: 'list' },
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+  public email = "leon.hoppe@hgbp.de";
+
+  constructor(private router: Router, public iserv: IServService) {
+    if (localStorage.getItem("userdata") == null) {
+      this.router.navigate(["login"]);
+    }
+  }
+
+  public logout() {
+    localStorage.removeItem("userdata");
+    this.router.navigate(["login"]);
+  }
+
 }

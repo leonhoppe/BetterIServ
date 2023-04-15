@@ -1,0 +1,20 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>BetterIServ</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="card-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>IServ Anmeldedaten</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-input label="E-Mail" type="email" #email/>
+        <ion-input label="Passwort" type="password" #password/>
+        <ion-button (click)="onLogin(email.value?.toString(), password.value?.toString())">Einloggen</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
