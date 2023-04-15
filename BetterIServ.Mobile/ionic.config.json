@@ -1,0 +1,7 @@
+{
+  "name": "BetterIServ.Mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
