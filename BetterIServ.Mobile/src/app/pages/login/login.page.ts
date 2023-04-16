@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
-import {IServService} from "../Api/iserv.service";
+import {IServService} from "../../api/iserv.service";
 import {Router} from "@angular/router";
 
 @Component({

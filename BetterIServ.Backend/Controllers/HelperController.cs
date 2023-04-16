@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BetterIServ.Backend.Controllers; 
 
 [ApiController]
-public class HelperController : Controller {
+public class HelperController : ControllerBase {
 
     [HttpPost("/login")]
     public async Task<ActionResult<string>> Login([FromForm] string email, [FromForm] string password) {
@@ -34,7 +34,7 @@ public class HelperController : Controller {
         
             return Ok(part.Replace("IServAuthSession=", ""));
         }
-        catch (Exception e) {
+        catch (Exception) {
             return Unauthorized();
         }
     }

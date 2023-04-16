@@ -9,7 +9,7 @@ import {firstValueFrom} from "rxjs";
 export class IServService {
 
   public userdata?: Userdata;
-  private backend: string = "http://localhost:5273";
+  public backend: string = "http://localhost:5273";
 
   constructor(private client: HttpClient) {
     const data = localStorage.getItem("userdata");

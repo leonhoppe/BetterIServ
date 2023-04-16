@@ -20,6 +20,8 @@ if (app.Environment.IsDevelopment()) {
 app.UseCors(options => {
     options.WithOrigins("http://localhost:8100");
     options.AllowCredentials();
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
 });
 
 app.UseAuthorization();

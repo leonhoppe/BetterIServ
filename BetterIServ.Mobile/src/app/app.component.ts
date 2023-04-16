@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import {IServService} from "./Api/iserv.service";
+import {IServService} from "./api/iserv.service";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -22,7 +22,7 @@ export class AppComponent {
   ];
   public email = "leon.hoppe@hgbp.de";
 
-  constructor(private router: Router, public iserv: IServService) {
+  constructor(public router: Router, public iserv: IServService) {
     if (localStorage.getItem("userdata") == null) {
       this.router.navigate(["login"]);
     }
