@@ -20,7 +20,6 @@ export class AppComponent {
     { title: 'Stundenplan', url: '/schedule', icon: 'grid' },
     { title: 'Vertretungsplan', url: '/substitution', icon: 'list' },
   ];
-  public email = "leon.hoppe@hgbp.de";
 
   constructor(public router: Router, public iserv: IServService) {
     if (localStorage.getItem("userdata") == null) {
