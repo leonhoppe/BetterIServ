@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {ActionSheetController, AlertController, IonicModule, Platform} from '@ionic/angular';
+import {ActionSheetController, AlertController, IonicModule, Platform, ToastController} from '@ionic/angular';
 import {WebdavService} from "../../api/webdav.service";
 import {DirectoryContent} from "../../entities/directoryContent";
 import {File} from "@awesome-cordova-plugins/file/ngx";
@@ -24,7 +24,7 @@ export class FilesPage implements OnInit {
 
   public progress: number = -1;
 
-  constructor(private webdav: WebdavService, private platform: Platform, private menus: ActionSheetController, private alerts: AlertController) { }
+  constructor(private webdav: WebdavService, private platform: Platform, private menus: ActionSheetController, private alerts: AlertController, private toasts: ToastController) { }
 
   async ngOnInit() {
     this.directoryContent = await this.webdav.getDirectory(this.currentDirectory);
@@ -122,9 +122,10 @@ export class FilesPage implements OnInit {
         await this.switchDirectory(this.currentDirectory);
         this.loading = false;
 
-        await (await this.alerts.create({
-          header: "Element gelöscht!",
-          buttons: ["Ok"]
+        await (await this.toasts.create({
+          message: "Element gelöscht!",
+          position: "bottom",
+          duration: 2000
         })).present();
       }
     }
@@ -152,6 +153,12 @@ export class FilesPage implements OnInit {
     await this.switchDirectory(this.currentDirectory);
     this.loading = false;
     form.reset();
+
+    await (await this.toasts.create({
+      message: "Element hochgeladen!",
+      position: "bottom",
+      duration: 2000
+    })).present();
   }
 
   public async createFolder(event: any) {
@@ -160,6 +167,12 @@ export class FilesPage implements OnInit {
     await this.webdav.createFolder(this.currentDirectory + event.detail.data);
     await this.switchDirectory(this.currentDirectory);
     this.loading = false;
+
+    await (await this.toasts.create({
+      message: "Ordner erstellt!",
+      position: "bottom",
+      duration: 2000
+    })).present();
   }
 
   public async onMove() {
@@ -168,6 +181,12 @@ export class FilesPage implements OnInit {
     await this.switchDirectory(this.currentDirectory);
     this.loading = false;
     delete this.clipboard;
+
+    await (await this.toasts.create({
+      message: "Element verschoben!",
+      position: "bottom",
+      duration: 2000
+    })).present();
   }
 
 }

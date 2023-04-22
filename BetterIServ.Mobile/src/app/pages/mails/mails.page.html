@@ -1,0 +1,96 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>E-Mails</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button id="new-email"><ion-icon ios="add-circle-outline" md="add-circle-sharp" /></ion-button>
+
+      <ion-modal trigger="new-email" #newEmail>
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button (click)="newEmail.dismiss()">Zurück</ion-button>
+              </ion-buttons>
+              <ion-title>Neue E-Mail</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="sendMail(receiver.value.toString(), subject.value.toString(), message.value, newEmail)">Senden</ion-button>
+              </ion-buttons>
+              <ion-progress-bar type="indeterminate" *ngIf="showLoading" />
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding current-mail">
+            <form class="new-email">
+              <ion-input type="email" label="An" labelPlacement="floating" fill="outline" #receiver />
+              <ion-input type="text" label="Betreff" labelPlacement="floating" fill="outline" #subject />
+              <ion-textarea label="Nachricht" labelPlacement="floating" fill="outline" auto-grow="true" #message />
+            </form>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </ion-buttons>
+
+    <ion-progress-bar type="indeterminate" *ngIf="showLoading" />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">E-Mails</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-select label="Ordner" [value]="folders[0]" interface="action-sheet" (ionChange)="changeFolder(select.value)" #select>
+    <ion-select-option *ngFor="let folder of folders" [value]="folder">
+      {{folder.name}}
+    </ion-select-option>
+  </ion-select>
+
+  <ion-list>
+    <ion-item *ngFor="let message of mails" class="mail pointer" (click)="selectMail(message, mailModal)">
+      <div>
+        <div>
+          <ion-icon ios="mail-unread-outline" md="mail-unread-sharp" *ngIf="!message.read" />
+          <ion-label>{{message.sender.displayName}}</ion-label>
+          <ion-label class="date">{{message.time.toLocaleDateString()}}</ion-label>
+        </div>
+        <ion-label class="subject">{{message.subject}}</ion-label>
+      </div>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <ion-modal #mailModal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="mailModal.dismiss()">Zurück</ion-button>
+          </ion-buttons>
+          <ion-title>{{currentMail?.sender.displayName}}</ion-title>
+          <ion-progress-bar type="indeterminate" *ngIf="showLoading" />
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding current-mail">
+        <div class="header">
+          <ion-label class="subject">{{currentMail?.subject}}</ion-label>
+          <ion-label class="time">{{currentMail?.time.toLocaleDateString()}}</ion-label>
+          <ion-list *ngIf="currentMail?.attachments?.length > 0">
+            <ion-item *ngFor="let attachment of currentMail?.attachments" class="pointer" (click)="downloadAttachment(attachment, currentMail?.id)">
+              <ion-label>{{attachment}}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+        <ion-item-divider />
+        <div class="message" [innerHtml]="currentMail?.message"></div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
