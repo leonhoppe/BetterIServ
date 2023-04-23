@@ -1,0 +1,6 @@
+GET https://hgbp.de/iserv/exercise.csv
+Payload: HEADER(cookie)[IServSession={sessionKey}; IServSAT={satKey};]
+
+ON_SUCCESS:
+STATUS 200
+CSV RESPONSE

@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-segment value="today" (ionChange)="changeDate(segment.value)" #segment>
+      <ion-segment-button value="today">
+        <ion-label>Heute</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="tomorrow">
+        <ion-label>Morgen</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Vertretungsplan</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-select label="Klasse" [value]="currentClass" interface="action-sheet" (ionChange)="changeClass(select.value)" #select>
+    <ion-select-option *ngFor="let className of getDistinctClasses()" [value]="className" [innerHtml]="className" />
+  </ion-select>
+
+  <section *ngIf="showNews">
+    <ion-card *ngFor="let info of data?.notifications">
+      <ion-card-content>
+        <ion-label [innerHtml]="info" style="color: #FFF"/>
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section *ngIf="!showNews">
+    <ion-card
+      *ngFor="let subs of data?.substitutions"
+      class="subs {{subs.type.replace(' ', '')}}"
+      [ngClass]="{'hide': subs.class != currentClass && currentClass != undefined}"
+    >
+      <ion-card-content>
+        <ion-label class="times">{{subs.times.join(" - ")}}</ion-label>
+        <div>
+          <ion-label class="type">{{subs.type}}</ion-label>
+          <ion-label class="desc" [innerHtml]="subs.lesson + ' (' + subs.teacher + ') ' + subs.room + ' ' + subs.description"></ion-label>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </section>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-tab-button (click)="showNews = false" [ngClass]="{'active': !showNews}">
+            <ion-icon ios="list-outline" md="list-sharp" />
+            Vertretungen
+          </ion-tab-button>
+        </ion-col>
+        <ion-col>
+          <ion-tab-button (click)="showNews = true" [ngClass]="{'active': showNews}">
+            <ion-icon ios="newspaper-outline" md="newspaper-sharp" />
+            Nachrichten
+          </ion-tab-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

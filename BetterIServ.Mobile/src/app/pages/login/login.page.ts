@@ -33,8 +33,6 @@ export class LoginPage implements OnInit {
 
       await alert.present();
     }
-
-    console.log(this.iservApi.userdata);
   }
 
 }

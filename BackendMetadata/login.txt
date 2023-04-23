@@ -2,5 +2,10 @@ POST https://hgbp.de/iserv/auth/login
 Payload: FORMDATA(_username: STRING, _password: STRING)
 
 ON_SUCCESS:
-STATUS 302
-SessionCookie: HEADER(set-cookie)[IServAuthSession={key};...]
+
+FOLLOW REDIRECT
+EXTRACT avatar URL
+MAKE REQUEST
+FOLLOW REDIRECTS
+
+Tokens: HEADER(Set-Cookie)[IServSAT={sat-Key}; IServSession={sessionKey}]

@@ -1,4 +1,6 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using PuppeteerSharp;
+
+await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -22,4 +22,8 @@ export const routes: Routes = [
     path: 'mails',
     loadComponent: () => import('./pages/mails/mails.page').then( m => m.MailsPage)
   },
+  {
+    path: 'substitution',
+    loadComponent: () => import('./pages/substitution/substitution.page').then( m => m.SubstitutionPage)
+  },
 ];

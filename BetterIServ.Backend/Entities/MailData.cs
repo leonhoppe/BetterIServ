@@ -2,8 +2,8 @@
 
 public sealed class MailData : Credentials {
 
-    public string? MailBody { get; set; }
-    public string? Receiver { get; set; }
-    public string? Subject { get; set; }
+    public required string MailBody { get; set; }
+    public required string Receiver { get; set; }
+    public required string Subject { get; set; }
     
 }

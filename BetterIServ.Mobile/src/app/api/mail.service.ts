@@ -37,7 +37,6 @@ export class MailService {
       domain: this.iserv.userdata.domain,
       username: this.iserv.userdata.username,
       password: this.iserv.userdata.password,
-      token: this.iserv.userdata.token,
       subject, receiver, mailBody
     };
     await firstValueFrom(this.client.post(this.iserv.backend + "/mail/send", data));

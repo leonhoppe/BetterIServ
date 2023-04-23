@@ -32,3 +32,11 @@ ion-menu-button {
 .pointer {
   cursor: pointer;
 }
+
+ion-select {
+  padding-inline: 15px;
+}
+
+.active {
+  color: var(--ion-color-primary);
+}

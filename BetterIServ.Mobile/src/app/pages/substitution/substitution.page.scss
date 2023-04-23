@@ -1,0 +1,48 @@
+.subs {
+  ion-card-content {
+    display: flex;
+    gap: 15px;
+    color: #FFF;
+
+    .times {
+      font-size: 25px;
+      line-height: 25px;
+      align-self: center;
+    }
+
+    div {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+
+      .type {
+        font-size: 18px;
+      }
+    }
+  }
+
+  &.Raumtausch {
+    --background: var(--ion-color-success-shade);
+  }
+
+  &.bittebeachten {
+    --background: var(--ion-color-warning-shade);
+  }
+
+  &.Vertretung {
+    --background: var(--ion-color-primary-shade);
+  }
+
+  &.Entfall, &.Stillarbeit {
+    --background: var(--ion-color-danger-shade);
+  }
+
+  &.Verlegung {
+    --background: var(--ion-color-secondary-shade);
+  }
+
+  &.hide {
+    display: none;
+  }
+}
