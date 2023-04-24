@@ -1,4 +1,5 @@
 ﻿using BetterIServ.Backend.Entities;
+using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using Credentials = BetterIServ.Backend.Entities.Credentials;
@@ -6,7 +7,7 @@ using Credentials = BetterIServ.Backend.Entities.Credentials;
 namespace BetterIServ.Backend.Controllers; 
 
 [ApiController]
-[Route("auth")]
+[Route("iserv")]
 public class AuthController : ControllerBase {
     
     [HttpPost("login")]
@@ -45,6 +46,30 @@ public class AuthController : ControllerBase {
         }
 
         return authKeys;
+    }
+
+    [HttpPost("groups")]
+    public async Task<ActionResult<SingleResult<string[]>>> GetCourses([FromBody] AuthKeys keys, [FromQuery] string domain) {
+        var client = new HttpClient();
+        var request = new HttpRequestMessage {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"https://{domain}/iserv/profile"),
+            Headers = {
+                { "cookie", keys.ToCookieString() }
+            }
+        };
+        var raw = await (await client.SendAsync(request)).Content.ReadAsStringAsync();
+        var html = new HtmlDocument();
+        html.LoadHtml(raw);
+
+        var list = html.DocumentNode.SelectSingleNode("//body/div/div[2]/div[3]/div/div/div[2]/div/div/div/div/ul[1]");
+        var courses = new List<string>();
+        foreach (var child in list.ChildNodes) {
+            if (child.ChildNodes.Count < 1) continue;
+            courses.Add(child.ChildNodes[0].InnerText);
+        }
+        
+        return new SingleResult<string[]> { Value = courses.ToArray() };
     }
 
 }

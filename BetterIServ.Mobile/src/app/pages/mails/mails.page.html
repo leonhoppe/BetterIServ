@@ -44,11 +44,13 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-select label="Ordner" [value]="folders[0]" interface="action-sheet" (ionChange)="changeFolder(select.value)" #select>
-    <ion-select-option *ngFor="let folder of folders" [value]="folder">
-      {{folder.name}}
-    </ion-select-option>
-  </ion-select>
+  <ion-item style="--background: transparent; --border-color: transparent">
+    <ion-select label="Ordner" [value]="folders[0]" interface="action-sheet" (ionChange)="changeFolder(select.value)" #select>
+      <ion-select-option *ngFor="let folder of folders" [value]="folder">
+        {{folder.name}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
 
   <ion-list>
     <ion-item *ngFor="let message of mails" class="mail pointer" (click)="selectMail(message, mailModal)">

@@ -42,15 +42,31 @@ public class UnitsController : ControllerBase {
             if (node.ChildNodes.Count < 9) continue;
             
             var substitution = new Substitution {
-                Class = node.ChildNodes[0].InnerText,
                 Times = node.ChildNodes[1].InnerText.Split(" - ").Select(int.Parse).ToArray(),
                 Type = node.ChildNodes[2].InnerText,
                 Representative = node.ChildNodes[3].InnerText,
-                Lesson = node.ChildNodes[4].InnerText,
+                NewLesson = node.ChildNodes[4].InnerText,
+                Lesson = node.ChildNodes[5].InnerText,
                 Room = node.ChildNodes[6].InnerText,
                 Teacher = node.ChildNodes[7].InnerText,
                 Description = node.ChildNodes[9].InnerText
             };
+
+            var classes = node.ChildNodes[0].InnerText;
+
+            if (!classes.StartsWith("Q")) {
+                string grade = new string(classes.ToCharArray().Where(char.IsNumber).ToArray());
+                var subClasses = classes.Replace(grade, "").ToCharArray();
+                var result = new string[subClasses.Length];
+
+                for (int j = 0; j < subClasses.Length; j++) {
+                    result[j] = grade + subClasses[j];
+                }
+                substitution.Classes = result;
+            }
+            else {
+                substitution.Classes = new[] { classes };
+            }
 
             data.Substitutions.Add(substitution);
         }

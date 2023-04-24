@@ -26,8 +26,8 @@
     --background: var(--ion-color-success-shade);
   }
 
-  &.bittebeachten {
-    --background: var(--ion-color-warning-shade);
+  &.bittebeachten, &.stregulärem {
+    --background: var(--ion-color-tertiary-shade);
   }
 
   &.Vertretung {
@@ -39,7 +39,7 @@
   }
 
   &.Verlegung {
-    --background: var(--ion-color-secondary-shade);
+    --background: var(--ion-color-warning-shade);
   }
 
   &.hide {

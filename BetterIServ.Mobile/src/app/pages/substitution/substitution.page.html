@@ -3,15 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-
-    <ion-segment value="today" (ionChange)="changeDate(segment.value)" #segment>
-      <ion-segment-button value="today">
-        <ion-label>Heute</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="tomorrow">
-        <ion-label>Morgen</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-title>Vertretungsplan</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -22,9 +14,14 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-select label="Klasse" [value]="currentClass" interface="action-sheet" (ionChange)="changeClass(select.value)" #select>
-    <ion-select-option *ngFor="let className of getDistinctClasses()" [value]="className" [innerHtml]="className" />
-  </ion-select>
+  <ion-segment value="today" (ionChange)="changeDate(segment.value)" #segment>
+    <ion-segment-button value="today">
+      <ion-label>Heute</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="tomorrow">
+      <ion-label>Morgen</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
   <section *ngIf="showNews">
     <ion-card *ngFor="let info of data?.notifications">
@@ -35,16 +32,26 @@
   </section>
 
   <section *ngIf="!showNews">
+    <ion-item style="--background: transparent; --border-color: transparent">
+      <ion-select label="Klasse" [value]="currentClass" interface="action-sheet" (ionChange)="changeClass(select.value)" #select>
+        <ion-select-option value="all">Alle Klassen</ion-select-option>
+        <ion-select-option *ngFor="let className of units.getClasses()" [value]="className" [innerHtml]="className" />
+      </ion-select>
+    </ion-item>
+    <ion-item style="--background: transparent; --border-color: transparent" *ngIf="currentClass == 'Q1' || currentClass == 'Q2'">
+      <ion-checkbox justify="space-between" [(ngModel)]="filterByClasses" (ionChange)="showOnlyCourses(classes.checked)" #classes>Nur eigene Kurse anzeigen</ion-checkbox>
+    </ion-item>
+
     <ion-card
       *ngFor="let subs of data?.substitutions"
-      class="subs {{subs.type.replace(' ', '')}}"
-      [ngClass]="{'hide': subs.class != currentClass && currentClass != undefined}"
+      class="subs {{subs.type.replace(' ', '').replace('.', '')}}"
+      [ngClass]="{'hide': (subs.classes.indexOf(currentClass) == -1 && currentClass != 'all') || !hasClass(subs.lesson)}"
     >
       <ion-card-content>
         <ion-label class="times">{{subs.times.join(" - ")}}</ion-label>
         <div>
           <ion-label class="type">{{subs.type}}</ion-label>
-          <ion-label class="desc" [innerHtml]="subs.lesson + ' (' + subs.teacher + ') ' + subs.room + ' ' + subs.description"></ion-label>
+          <ion-label class="desc" [innerHtml]="getDetails(subs)"></ion-label>
         </div>
       </ion-card-content>
     </ion-card>

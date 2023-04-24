@@ -9,12 +9,18 @@ import {firstValueFrom} from "rxjs";
 export class IServService {
 
   public userdata?: Userdata;
+  public keys?: AuthKeys;
   public backend: string = "http://localhost:5273";
 
   constructor(private client: HttpClient) {
     const data = localStorage.getItem("userdata");
     if (data != null) {
       this.userdata = JSON.parse(data);
+    }
+
+    const keys = localStorage.getItem("keys");
+    if (keys != null) {
+      this.keys = JSON.parse(keys);
     }
   }
 
@@ -27,8 +33,9 @@ export class IServService {
     };
 
     try {
-      await firstValueFrom(this.client.post(this.backend + "/auth/login", this.userdata));
+      const keys = await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/iserv/login", this.userdata));
       localStorage.setItem("userdata", JSON.stringify(this.userdata));
+      localStorage.setItem("keys", JSON.stringify(keys));
       return true;
     }catch (error) {
       return false;
@@ -36,7 +43,18 @@ export class IServService {
   }
 
   public async getKeys(): Promise<AuthKeys> {
-    return await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/auth/login", this.userdata));
+    const keys = await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/iserv/login", this.userdata));
+    localStorage.setItem("keys", JSON.stringify(keys));
+    return keys;
+  }
+
+  public async getGroups(): Promise<string[]> {
+    try {
+      return (await firstValueFrom(this.client.post<{value: string[]}>(this.backend + "/iserv/groups?domain=" + this.userdata.domain, this.keys))).value;
+    } catch {
+      await this.getKeys();
+      return (await firstValueFrom(this.client.post<{value: string[]}>(this.backend + "/iserv/groups?domain=" + this.userdata.domain, this.keys))).value;
+    }
   }
 
 }
