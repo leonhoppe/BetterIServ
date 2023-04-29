@@ -8,7 +8,7 @@ namespace BetterIServ.Backend.Controllers;
 
 [ApiController]
 [Route("iserv")]
-public class AuthController : ControllerBase {
+public class IServController : ControllerBase {
     
     [HttpPost("login")]
     public async Task<ActionResult<AuthKeys>> GetAuthKeysV2([FromBody] Credentials credentials) {

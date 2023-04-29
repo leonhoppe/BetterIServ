@@ -5,6 +5,7 @@ import {AlertController, IonicModule} from '@ionic/angular';
 import {UnitsService} from "../../api/units.service";
 import {Substitution, UnitsData} from "../../entities/substitution";
 import {IServService} from "../../api/iserv.service";
+import {Course} from "../../entities/course";
 
 @Component({
   selector: 'app-substitution',
@@ -40,10 +41,31 @@ export class SubstitutionPage implements OnInit {
 
     this.data = await this.units.getSubstitutionPlan("today");
 
-    const groups = await this.iserv.getGroups();
-    for (let group of groups) {
-      if (!group.includes(".")) continue;
-      this.courses.push(group.split(".")[1]);
+    const data = await this.iserv.getCoursesAndClass();
+    if (localStorage.getItem("class") == null) {
+      if (!data.class.startsWith("Q")) {
+        this.changeClass(data.class);
+      }else {
+        this.changeClass(data.class);
+        this.showOnlyCourses(true);
+        this.filterByClasses = true;
+      }
+    }
+
+    if (data.class.startsWith("Q")) {
+      if (localStorage.getItem("courses") != undefined) {
+        const courses = JSON.parse(localStorage.getItem("courses")) as Course[];
+        for (let course of courses) {
+          this.courses.push(course.id);
+        }
+      }else {
+        const alert = await this.alerts.create({
+          header: "Achtung",
+          message: "Füge deine Kurse im Stundenplan hinzu um sie hier zu filtern!",
+          buttons: ["Ok"]
+        });
+        await alert.present();
+      }
     }
   }
 

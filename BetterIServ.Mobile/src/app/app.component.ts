@@ -28,7 +28,8 @@ export class AppComponent {
   }
 
   public logout() {
-    localStorage.removeItem("userdata");
+    localStorage.clear();
+    this.iserv.logout();
     this.router.navigate(["login"]);
   }
 
