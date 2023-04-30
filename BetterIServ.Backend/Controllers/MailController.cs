@@ -4,6 +4,7 @@ using System.Text;
 using Aspose.Email.Clients.Imap;
 using BetterIServ.Backend.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BetterIServ.Backend.Controllers; 
 
@@ -92,8 +93,11 @@ public class MailController : ControllerBase {
         return new SingleResult<ImapFolderInfo[]> { Value = results.ToArray() };
     }
 
-    [HttpPost("download/{id}/{attachment}")]
-    public async Task<FileStreamResult> DownloadAttachment([FromBody] Credentials credentials, [FromRoute] int id, [FromRoute] string attachment) {
+    [HttpGet("download/{id}/{attachment}")]
+    public async Task<FileStreamResult> DownloadAttachment([FromQuery] string credentialString, [FromRoute] int id, [FromRoute] string attachment) {
+        var credentials = JsonConvert.DeserializeObject<Credentials>(credentialString);
+        if (credentials == null) return new FileStreamResult(Stream.Null, "");
+        
         using var client = new ImapClient($"imap.{credentials.Domain}", credentials.Username, credentials.Password);
         var data = await client.FetchAttachmentAsync(id, attachment);
         

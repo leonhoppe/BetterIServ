@@ -23,8 +23,9 @@ export class WebdavService {
     return contents;
   }
 
-  public downloadFile(url: string): Observable<HttpEvent<Blob>> {
-    return this.client.post(this.iserv.backend + "/webdav/download?url=" + url, this.iserv.userdata, {responseType: "blob", reportProgress: true, observe: "events"});
+  public downloadFile(url: string): string {
+    //return this.client.get(this.iserv.backend + `/webdav/download?url=${url}&credentialString=${JSON.stringify(this.iserv.userdata)}`, {responseType: "blob", reportProgress: true, observe: "events"});
+    return this.iserv.backend + `/webdav/download?url=${url}&credentialString=${JSON.stringify(this.iserv.userdata)}`;
   }
 
   public async delete(url: string) {

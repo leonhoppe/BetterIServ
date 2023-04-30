@@ -54,7 +54,7 @@
               <ion-buttons slot="start">
                 <ion-button (click)="tableModal.dismiss(null, 'cancel')">Abbrechen</ion-button>
               </ion-buttons>
-              <ion-title>{{currentLesson?.lesson.course || "Neue Stunde"}}</ion-title>
+              <ion-title>{{currentLesson?.lesson?.course || "Neue Stunde"}}</ion-title>
               <ion-buttons slot="end">
                 <ion-button (click)="tableModal.dismiss({lesson: {course: course.value, room: room.value, week: week.value}, day: day.value, time: lesson.value}, 'confirm')" [strong]="true">Fertig</ion-button>
               </ion-buttons>
@@ -63,7 +63,7 @@
           <ion-content class="ion-padding course-content">
             <ion-item>
               <ion-label position="stacked">Kurs</ion-label>
-              <ion-select aria-label="Kurs" interface="action-sheet" [value]="currentLesson?.lesson.course || courses[0].id" #course>
+              <ion-select aria-label="Kurs" interface="action-sheet" [value]="currentLesson?.lesson?.course || courses[0].id" (ionChange)="room.value = getCommonCourseRoom(course.value)" #course>
                 <ion-select-option *ngFor="let course of courses" [value]="course.id">
                   {{course.name}}
                 </ion-select-option>
@@ -71,7 +71,7 @@
             </ion-item>
             <ion-item>
               <ion-label position="stacked">Wochentyp</ion-label>
-              <ion-select aria-label="Wochentyp" interface="action-sheet" [value]="currentLesson?.lesson.week || 'all'" #week>
+              <ion-select aria-label="Wochentyp" interface="action-sheet" [value]="currentLesson?.lesson?.week || 'all'" #week>
                 <ion-select-option value="all">Immer</ion-select-option>
                 <ion-select-option value="a">Woche A</ion-select-option>
                 <ion-select-option value="b">Woche B</ion-select-option>
@@ -79,7 +79,7 @@
             </ion-item>
             <ion-item>
               <ion-label position="stacked">Raum</ion-label>
-              <ion-input aria-label="Raum" type="text" [value]="currentLesson?.lesson.room" #room/>
+              <ion-input aria-label="Raum" type="text" [value]="currentLesson?.lesson?.room" #room/>
             </ion-item>
 
             <ion-item>

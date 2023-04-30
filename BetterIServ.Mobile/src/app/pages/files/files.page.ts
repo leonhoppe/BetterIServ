@@ -4,9 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {ActionSheetController, AlertController, IonicModule, Platform, ToastController} from '@ionic/angular';
 import {WebdavService} from "../../api/webdav.service";
 import {DirectoryContent} from "../../entities/directoryContent";
-import {File} from "@awesome-cordova-plugins/file/ngx";
-import {saveAs} from "file-saver";
-import {HttpDownloadProgressEvent, HttpEventType} from "@angular/common/http";
+import {HttpEventType} from "@angular/common/http";
 
 @Component({
   selector: 'app-files',
@@ -47,29 +45,8 @@ export class FilesPage implements OnInit {
     if (item.type == "dir") {
       await this.switchDirectory(item.url);
     }else {
-      this.webdav.downloadFile(item.url).subscribe(async event => {
-        if (event.type == HttpEventType.DownloadProgress) {
-          const e = event as HttpDownloadProgressEvent;
-          this.progress = e.loaded / e.total * 100;
-        }
-
-        if (event.type == HttpEventType.Response) {
-          const blob = event.body;
-          const file = new File();
-
-          if (this.platform.is('desktop')) {
-            saveAs(blob, item.name);
-            this.progress = -1;
-            return;
-          }
-
-          const downloadPath = (
-            this.platform.is('android')
-          ) ? file.externalDataDirectory : file.documentsDirectory;
-          await file.writeFile(downloadPath, item.name, blob, {replace: true});
-          this.progress = -1;
-        }
-      })
+      const download = this.webdav.downloadFile(item.url);
+      window.open(download, "_blank");
     }
   }
 

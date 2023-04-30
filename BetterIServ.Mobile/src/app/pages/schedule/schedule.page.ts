@@ -79,12 +79,28 @@ export class SchedulePage implements OnInit {
     }
 
     if (event.detail.role == "confirm") {
+      if (this.currentLesson != undefined) {
+        delete this.timetable[this.currentLesson.day][this.currentLesson.time];
+      }
+
       const data = event.detail.data as {lesson: Lesson, day: string, time: number};
       this.timetable[data.day][data.time] = data.lesson;
     }
 
     localStorage.setItem("timetable", JSON.stringify(this.timetable));
     location.reload();
+  }
+
+  public getCommonCourseRoom(course: string): string {
+    if (course == undefined) return "";
+
+    const rooms: string[] = [];
+    for (let day of ['mon', 'tue', 'wed', 'thu', 'fri']) {
+      const courseTime = this.timetable[day].filter(lesson => lesson != undefined && lesson.course == course) as Lesson[];
+      rooms.push(...courseTime.map(time => time.room));
+    }
+
+    return rooms[rooms.length - 1];
   }
 
 }

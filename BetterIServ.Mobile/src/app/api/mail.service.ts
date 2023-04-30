@@ -42,8 +42,9 @@ export class MailService {
     await firstValueFrom(this.client.post(this.iserv.backend + "/mail/send", data));
   }
 
-  public downloadAttachment(mailId: number, attachment: string): Observable<HttpEvent<Blob>> {
-    return this.client.post(this.iserv.backend + `/mail/download/${mailId}/${attachment}`, this.iserv.userdata, {responseType: "blob", reportProgress: true, observe: "events"});
+  public downloadAttachment(mailId: number, attachment: string): string {
+    //return this.client.post(this.iserv.backend + `/mail/download/${mailId}/${attachment}`, this.iserv.userdata, {responseType: "blob", reportProgress: true, observe: "events"});
+    return this.iserv.backend + `/mail/download/${mailId}/${attachment}?credentialString=${JSON.stringify(this.iserv.userdata)}`;
   }
 
 }

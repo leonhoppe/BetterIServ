@@ -5,9 +5,6 @@ import {IonicModule, IonModal, Platform, ToastController} from '@ionic/angular';
 import {MailService} from "../../api/mail.service";
 import {MailContent, MailFolder} from "../../entities/mail";
 import {marked} from "marked";
-import {HttpEventType} from "@angular/common/http";
-import {File} from "@awesome-cordova-plugins/file/ngx";
-import {saveAs} from "file-saver";
 import {MailComponent} from "../../components/mail/mail.component";
 import {ActivatedRoute} from "@angular/router";
 
@@ -83,25 +80,8 @@ export class MailsPage implements OnInit {
   }
 
   public async downloadAttachment(attachment: string, mailId: number) {
-    this.showLoading = true;
-    this.mail.downloadAttachment(mailId, attachment).subscribe(async event => {
-      if (event.type == HttpEventType.Response) {
-        const blob = event.body;
-        const file = new File();
-
-        if (this.platform.is('desktop')) {
-          saveAs(blob, attachment);
-          this.showLoading = false;
-          return;
-        }
-
-        const downloadPath = (
-          this.platform.is('android')
-        ) ? file.externalDataDirectory : file.documentsDirectory;
-        await file.writeFile(downloadPath, attachment, blob, {replace: true});
-        this.showLoading = false;
-      }
-    })
+    const download = this.mail.downloadAttachment(mailId, attachment);
+    window.open(download, "_blank");
   }
 
   public async sendMail(receiver: string, subject: string, message: string, modal: IonModal) {

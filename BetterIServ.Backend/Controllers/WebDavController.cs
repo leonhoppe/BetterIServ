@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using BetterIServ.Backend.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebDav;
 
 namespace BetterIServ.Backend.Controllers;
@@ -40,8 +41,11 @@ public class WebDavController : ControllerBase {
         return contents.OrderBy(item => item.Type).ToArray();
     }
 
-    [HttpPost("download")]
-    public async Task<FileStreamResult> DonwloadFile([FromBody] Credentials credentials, [FromQuery] string url) {
+    [HttpGet("download")]
+    public async Task<FileStreamResult> DonwloadFile([FromQuery] string url, [FromQuery] string credentialString) {
+        var credentials = JsonConvert.DeserializeObject<Credentials>(credentialString);
+        if (credentials == null) return new FileStreamResult(Stream.Null, "");
+        
         var baseAddress = new Uri($"https://webdav.{credentials.Domain}");
         using var client = new WebDavClient(new WebDavClientParams {
             BaseAddress = baseAddress,
