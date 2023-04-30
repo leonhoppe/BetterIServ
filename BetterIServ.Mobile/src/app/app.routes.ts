@@ -23,12 +23,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/mails/mails.page').then( m => m.MailsPage)
   },
   {
-    path: 'substitution',
-    loadComponent: () => import('./pages/substitution/substitution.page').then( m => m.SubstitutionPage)
+    path: 'mails/:id',
+    loadComponent: () => import('./pages/mails/mails.page').then( m => m.MailsPage)
   },
   {
-    path: 'tasks',
-    loadComponent: () => import('./pages/tasks/tasks.page').then( m => m.TasksPage)
+    path: 'substitution',
+    loadComponent: () => import('./pages/substitution/substitution.page').then( m => m.SubstitutionPage)
   },
   {
     path: 'schedule',

@@ -1,1 +1,9 @@
+.lesson-container {
+  display: flex;
+  flex-grow: 1;
+  gap: 8px;
+}
 
+.lesson-content {
+  overflow-x: scroll;
+}

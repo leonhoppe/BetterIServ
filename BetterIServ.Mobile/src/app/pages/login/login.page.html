@@ -11,9 +11,11 @@
         <ion-card-title>IServ Anmeldedaten</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-input label="E-Mail" type="email" #email/>
-        <ion-input label="Passwort" type="password" #password/>
-        <ion-button (click)="onLogin(email.value?.toString(), password.value?.toString())">Einloggen</ion-button>
+        <form (submit)="$event.preventDefault(); onLogin(email.value?.toString(), password.value?.toString())">
+          <ion-input label="E-Mail" type="email" #email/>
+          <ion-input label="Passwort" type="password" #password/>
+          <ion-button type="submit">Einloggen</ion-button>
+        </form>
       </ion-card-content>
     </ion-card>
   </div>

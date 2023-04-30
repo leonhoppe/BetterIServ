@@ -1,10 +1,13 @@
-using PuppeteerSharp;
-
-await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(options => {
+    options.AddPolicy("BetterIserv", policy => {
+        policy.WithOrigins("http://localhost", "http://localhost:8100")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,12 +22,7 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwaggerUI();
 }
 
-app.UseCors(options => {
-    options.WithOrigins("http://localhost:8100");
-    options.AllowCredentials();
-    options.AllowAnyHeader();
-    options.AllowAnyMethod();
-});
+app.UseCors("BetterIserv");
 
 app.UseAuthorization();
 

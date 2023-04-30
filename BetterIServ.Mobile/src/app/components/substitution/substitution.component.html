@@ -1,0 +1,11 @@
+<ion-card
+  class="subs {{subs?.type.replace(' ', '').replace('.', '')}}"
+>
+  <ion-card-content>
+    <ion-label class="times">{{subs?.times.join(" - ")}}</ion-label>
+    <div>
+      <ion-label class="type">{{subs?.type}}</ion-label>
+      <ion-label class="desc" [innerHtml]="getDetails(subs)"></ion-label>
+    </div>
+  </ion-card-content>
+</ion-card>

@@ -23,7 +23,9 @@ export class LoginPage implements OnInit {
     if (email == undefined || password == undefined) return;
 
     if (await this.iservApi.login(email, password)) {
-      await this.router.navigate(['home']);
+      setTimeout(async () => {
+        await this.router.navigate(['home']);
+      }, 500);
     }else {
       const alert = await this.alerts.create({
         header: "Fehler",

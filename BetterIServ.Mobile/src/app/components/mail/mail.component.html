@@ -1,0 +1,10 @@
+<ion-item class="mail pointer">
+  <div>
+    <div>
+      <ion-icon ios="mail-unread-outline" md="mail-unread-sharp" *ngIf="!message.read" />
+      <ion-label>{{message.sender.displayName}}</ion-label>
+      <ion-label class="date">{{message.time.toLocaleDateString()}}</ion-label>
+    </div>
+    <ion-label class="subject">{{message.subject}}</ion-label>
+  </div>
+</ion-item>

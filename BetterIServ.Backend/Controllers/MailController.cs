@@ -68,7 +68,7 @@ public class MailController : ControllerBase {
             Subject = message.Subject.Replace("(Aspose.Email Evaluation)", ""),
             Time = message.Date,
             Read = true,
-            Message = message.Body.Replace("EVALUATION ONLY. CREATED WITH ASPOSE.EMAIL FOR .NET. COPYRIGHT 2002-2022 ASPOSE PTY LTD. \r\n http://www.aspose.com/corporate/purchase/end-user-license-agreement.aspx: View EULA Online\r\n", ""),
+            Message = message.Body.Split("View EULA")[1],
             Attachments = message.Attachments.Select(a => a.Name).ToArray()
         };
 

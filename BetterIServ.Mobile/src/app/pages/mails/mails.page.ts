@@ -1,20 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {InfiniteScrollCustomEvent, IonicModule, IonModal, Platform, ToastController} from '@ionic/angular';
+import {IonicModule, IonModal, Platform, ToastController} from '@ionic/angular';
 import {MailService} from "../../api/mail.service";
 import {MailContent, MailFolder} from "../../entities/mail";
 import {marked} from "marked";
-import {HttpDownloadProgressEvent, HttpEventType} from "@angular/common/http";
+import {HttpEventType} from "@angular/common/http";
 import {File} from "@awesome-cordova-plugins/file/ngx";
 import {saveAs} from "file-saver";
+import {MailComponent} from "../../components/mail/mail.component";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-mails',
   templateUrl: './mails.page.html',
   styleUrls: ['./mails.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+    imports: [IonicModule, CommonModule, FormsModule, MailComponent]
 })
 export class MailsPage implements OnInit {
 
@@ -25,7 +27,9 @@ export class MailsPage implements OnInit {
   private currentPage = 0;
   private currentFolder: MailFolder;
 
-  constructor(private mail: MailService, private platform: Platform, private toasts: ToastController) { }
+  @ViewChild('mailModal') mailModal: IonModal;
+
+  constructor(private mail: MailService, private platform: Platform, private toasts: ToastController, private route: ActivatedRoute) { }
 
   async ngOnInit() {
     this.showLoading = true;
@@ -38,6 +42,14 @@ export class MailsPage implements OnInit {
 
     this.currentFolder = this.folders.filter(folder => folder.name == "INBOX")[0];
     this.showLoading = false;
+
+    this.route.params.subscribe((params: {id: string}) => {
+      if (params.id != undefined) {
+        const id = Number(params.id);
+        const email = this.mails.filter(mail => mail.id == id)[0];
+        this.selectMail(email, this.mailModal);
+      }
+    })
   }
 
   public async changeFolder(folder: MailFolder) {

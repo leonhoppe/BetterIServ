@@ -1,0 +1,13 @@
+<ion-card>
+  <ion-card-header>
+          <span
+            class="lesson-icon ion-text-center"
+            [style]="'--background: var(--ion-color-' + findCourse(lesson?.course)?.color + '); --foreground: var(--ion-color-' + findCourse(lesson?.course)?.color + '-contrast)'"
+          >
+            {{findCourse(lesson?.course)?.short || "PH"}}
+          </span>
+  </ion-card-header>
+  <ion-card-content class="ion-text-center">
+    <ion-label>{{lesson?.room || "&#10240; &#x2800;"}}</ion-label>
+  </ion-card-content>
+</ion-card>

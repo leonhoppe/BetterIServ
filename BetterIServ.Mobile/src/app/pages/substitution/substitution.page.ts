@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
 import {UnitsService} from "../../api/units.service";
-import {Substitution, UnitsData} from "../../entities/substitution";
+import {UnitsData} from "../../entities/substitution";
 import {IServService} from "../../api/iserv.service";
-import {Course} from "../../entities/course";
+import {SubstitutionComponent} from "../../components/substitution/substitution.component";
 
 @Component({
   selector: 'app-substitution',
   templateUrl: './substitution.page.html',
   styleUrls: ['./substitution.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, SubstitutionComponent]
 })
 export class SubstitutionPage implements OnInit {
 
@@ -42,29 +42,23 @@ export class SubstitutionPage implements OnInit {
     this.data = await this.units.getSubstitutionPlan("today");
 
     const data = await this.iserv.getCoursesAndClass();
-    if (localStorage.getItem("class") == null) {
-      if (!data.class.startsWith("Q")) {
-        this.changeClass(data.class);
-      }else {
-        this.changeClass(data.class);
+    if (data.class.startsWith("Q")) {
+      for (let course of data.courses) {
+        this.courses.push(course.id);
+      }
+
+      if (localStorage.getItem("filterByClasses") == null) {
         this.showOnlyCourses(true);
         this.filterByClasses = true;
-      }
-    }
 
-    if (data.class.startsWith("Q")) {
-      if (localStorage.getItem("courses") != undefined) {
-        const courses = JSON.parse(localStorage.getItem("courses")) as Course[];
-        for (let course of courses) {
-          this.courses.push(course.id);
+        if (data.courses.length == 0) {
+          const alert = await this.alerts.create({
+            header: "Achtung",
+            message: "Füge deine Kurse im Stundenplan hinzu um sie hier zu filtern!",
+            buttons: ["Ok"]
+          });
+          await alert.present();
         }
-      }else {
-        const alert = await this.alerts.create({
-          header: "Achtung",
-          message: "Füge deine Kurse im Stundenplan hinzu um sie hier zu filtern!",
-          buttons: ["Ok"]
-        });
-        await alert.present();
       }
     }
   }
@@ -79,40 +73,6 @@ export class SubstitutionPage implements OnInit {
 
     this.filterByClasses = false;
     this.showOnlyCourses(false);
-  }
-
-  public getDetails(subs: Substitution): string {
-    if (subs.type == "bitte beachten") {
-      const desc = subs.description != "&nbsp;" ? ' - ' + subs.description : "";
-      let info = `${subs.lesson} (${subs.teacher}) in ${subs.room}`;
-
-      if (subs.lesson != subs.newLesson) {
-        info = `${subs.newLesson} (${subs.representative}) statt ${subs.lesson} (${subs.teacher}) in ${subs.room}`;
-      }
-
-      return info + desc;
-    }
-
-    switch (subs.type) {
-      case "Vertretung":
-      case "st. regulärem Unt.":
-        return `${subs.lesson} (${subs.representative} statt ${subs.teacher}) in ${subs.room}`;
-
-      case "Raumtausch":
-        return `${subs.lesson} (${subs.teacher}) in ${subs.room}`;
-
-      case "Entfall":
-        return `${subs.lesson} (${subs.teacher})`;
-
-      case "Stillarbeit":
-        return `${subs.lesson} (${subs.teacher}) in ${subs.room}`;
-
-      case "Verlegung":
-        return `${subs.newLesson} (${subs.representative}) statt ${subs.lesson} (${subs.teacher}) in ${subs.room}`;
-
-      default:
-        return subs.lesson + ' (' + subs.teacher + ') ' + subs.room;
-    }
   }
 
   public showOnlyCourses(toggle: boolean) {

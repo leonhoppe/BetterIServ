@@ -24,8 +24,8 @@
           <ion-content class="ion-padding course-content">
             <ion-item>
               <ion-label position="stacked">Farbe</ion-label>
-              <ion-select aria-label="Farbe" interface="action-sheet" [value]="colors[0].val" #color>
-                <ion-select-option *ngFor="let color of colors" [value]="color.val">
+              <ion-select aria-label="Farbe" interface="action-sheet" [value]="iserv.colors[0].val" #color>
+                <ion-select-option *ngFor="let color of iserv.colors" [value]="color.val">
                   {{color.name}}
                 </ion-select-option>
               </ion-select>
@@ -124,7 +124,7 @@
       <ion-card *ngFor="let course of courses" (click)="onEditOrAdd(course)">
         <ion-card-header>
           <span
-            class="icon ion-text-center"
+            class="lesson-icon ion-text-center"
             [style]="'--background: var(--ion-color-' + course.color + '); --foreground: var(--ion-color-' + course.color + '-contrast)'"
           >
             {{course.short}}
@@ -146,19 +146,7 @@
       <ion-label *ngIf="day == 'thu'">Do</ion-label>
       <ion-label *ngIf="day == 'fri'">Fr</ion-label>
 
-      <ion-card *ngFor="let lesson of timetable[day] | week; let i = index" [ngClass]="{'hide': lesson == undefined}" (click)="onEditOrAdd(undefined, {lesson, day, time: i})">
-        <ion-card-header>
-          <span
-            class="icon ion-text-center"
-            [style]="'--background: var(--ion-color-' + findCourse(lesson?.course)?.color + '); --foreground: var(--ion-color-' + findCourse(lesson?.course)?.color + '-contrast)'"
-          >
-            {{findCourse(lesson?.course)?.short || "&#10240; &#x2800;"}}
-          </span>
-        </ion-card-header>
-        <ion-card-content class="ion-text-center">
-          <ion-label>{{lesson?.room || "&#10240; &#x2800;"}}</ion-label>
-        </ion-card-content>
-      </ion-card>
+      <lesson *ngFor="let lesson of timetable[day] | week; let i = index" [ngClass]="{'hide': lesson == undefined}" (click)="onEditOrAdd(undefined, {lesson, day, time: i})" [lesson]="lesson" [courses]="courses" />
     </div>
   </section>
 </ion-content>

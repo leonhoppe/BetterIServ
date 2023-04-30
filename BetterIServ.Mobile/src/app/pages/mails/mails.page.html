@@ -53,16 +53,7 @@
   </ion-item>
 
   <ion-list>
-    <ion-item *ngFor="let message of mails" class="mail pointer" (click)="selectMail(message, mailModal)">
-      <div>
-        <div>
-          <ion-icon ios="mail-unread-outline" md="mail-unread-sharp" *ngIf="!message.read" />
-          <ion-label>{{message.sender.displayName}}</ion-label>
-          <ion-label class="date">{{message.time.toLocaleDateString()}}</ion-label>
-        </div>
-        <ion-label class="subject">{{message.subject}}</ion-label>
-      </div>
-    </ion-item>
+    <mail *ngFor="let message of mails" [mail]="message" (click)="selectMail(message, mailModal)" />
   </ion-list>
   <ion-infinite-scroll (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
@@ -81,9 +72,9 @@
       </ion-header>
       <ion-content class="ion-padding current-mail">
         <div class="header">
-          <ion-label class="subject">{{currentMail?.subject}}</ion-label>
+          <ion-label class="subject">{{currentMail?.subject}}</ion-label><br>
           <ion-label class="time">{{currentMail?.time.toLocaleDateString()}}</ion-label>
-          <ion-list *ngIf="currentMail?.attachments?.length > 0">
+          <ion-list *ngIf="currentMail?.attachments?.length > 0" style="margin-top: 10px">
             <ion-item *ngFor="let attachment of currentMail?.attachments" class="pointer" (click)="downloadAttachment(attachment, currentMail?.id)">
               <ion-label>{{attachment}}</ion-label>
             </ion-item>

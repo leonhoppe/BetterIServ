@@ -36,3 +36,15 @@ ion-menu-button {
 .active {
   color: var(--ion-color-primary);
 }
+
+.lesson-icon {
+  margin-inline: auto;
+  aspect-ratio: 1;
+  width: 45px;
+  padding: 10px;
+  border-radius: 50%;
+  line-height: 25px;
+
+  background-color: var(--background);
+  color: var(--foreground);
+}

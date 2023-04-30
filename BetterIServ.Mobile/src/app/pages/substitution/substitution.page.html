@@ -42,19 +42,7 @@
       <ion-checkbox justify="space-between" [(ngModel)]="filterByClasses" (ionChange)="showOnlyCourses(classes.checked)" #classes>Nur eigene Kurse anzeigen</ion-checkbox>
     </ion-item>
 
-    <ion-card
-      *ngFor="let subs of data?.substitutions"
-      class="subs {{subs.type.replace(' ', '').replace('.', '')}}"
-      [ngClass]="{'hide': (subs.classes.indexOf(currentClass) == -1 && currentClass != 'all') || !hasClass(subs.lesson)}"
-    >
-      <ion-card-content>
-        <ion-label class="times">{{subs.times.join(" - ")}}</ion-label>
-        <div>
-          <ion-label class="type">{{subs.type}}</ion-label>
-          <ion-label class="desc" [innerHtml]="getDetails(subs)"></ion-label>
-        </div>
-      </ion-card-content>
-    </ion-card>
+    <substitution *ngFor="let subs of data?.substitutions" [subs]="subs" [ngClass]="{'hide': (subs.classes.indexOf(currentClass) == -1 && currentClass != 'all') || !hasClass(subs.lesson)}" />
   </section>
 </ion-content>
 

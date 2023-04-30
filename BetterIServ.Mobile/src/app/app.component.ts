@@ -16,7 +16,6 @@ export class AppComponent {
     { title: 'Übersicht', url: '/home', icon: 'home' },
     { title: 'E-Mail', url: '/mails', icon: 'mail' },
     { title: 'Dateien', url: '/files', icon: 'folder' },
-    { title: 'Aufgaben', url: '/tasks', icon: 'clipboard' },
     { title: 'Stundenplan', url: '/schedule', icon: 'grid' },
     { title: 'Vertretungsplan', url: '/substitution', icon: 'list' },
   ];

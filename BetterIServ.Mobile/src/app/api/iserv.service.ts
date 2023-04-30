@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Userdata, AuthKeys} from "../entities/userdata";
 import {firstValueFrom} from "rxjs";
+import {environment} from "../../environments/environment";
+import {Course} from "../entities/course";
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,7 @@ export class IServService {
 
   public userdata?: Userdata;
   public keys?: AuthKeys;
-  public backend: string = "http://localhost:5273";
+  public backend: string = environment.backend;
 
   public courseNames: {[id: string]: string} = {
     ["Bi"]: "Biologie",
@@ -32,6 +34,14 @@ export class IServService {
     ["Sf"]: "Seminarfach",
     ["DS"]: "Darstellendes Spiel",
   };
+  public colors: {name: string; val: string}[] = [
+    {name: "Blau", val: "primary"},
+    {name: "Hellblau", val: "secondary"},
+    {name: "Lila", val: "tertiary"},
+    {name: "Grün", val: "success"},
+    {name: "Gelb", val: "warning"},
+    {name: "Rot", val: "danger"}
+  ];
 
   constructor(private client: HttpClient) {
     const data = localStorage.getItem("userdata");
@@ -83,7 +93,13 @@ export class IServService {
     }
   }
 
-  public async getCoursesAndClass(groups?: string[]): Promise<{class: string, courses: string[]}> {
+  public async getCoursesAndClass(groups?: string[]): Promise<{class: string, courses: Course[]}> {
+    if (localStorage.getItem("courses") && localStorage.getItem("class")) {
+      const courses = JSON.parse(localStorage.getItem("courses")) as Course[];
+      const className = localStorage.getItem("class");
+      return {courses, class: className};
+    }
+
     if (groups == undefined) {
       groups = await this.getGroups();
     }
@@ -99,13 +115,37 @@ export class IServService {
         result.class = grades[0].replace("Jahrgang ", "").toUpperCase();
       }
     }
+    localStorage.setItem("class", result.class);
 
     for (let group of groups) {
       if (!group.includes(".") || !group.toLowerCase().startsWith("q")) continue;
       result.courses.push(group.split(".")[1]);
     }
 
-    return result;
+    if (result.class.startsWith("Q")) {
+      const courses: Course[] = [];
+      for (let course of result.courses) {
+        const short = course.substring(1, 3);
+        const name = this.courseNames[short];
+        if (name == undefined) continue;
+        courses.push({
+          id: course,
+          short: short.toUpperCase(),
+          name: name,
+          color: this.colors[Math.floor(Math.random() * this.colors.length)].val
+        });
+      }
+      courses.sort((a, b) => {
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+      });
+
+      localStorage.setItem("courses", JSON.stringify(courses));
+      return {class: result.class, courses};
+    }
+
+    return {class: result.class, courses: []};
   }
 
 }

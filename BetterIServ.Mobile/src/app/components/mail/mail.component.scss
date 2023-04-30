@@ -1,0 +1,25 @@
+.mail > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-block: 15px;
+  width: 100%;
+
+  .subject, .date {
+    font-size: 15px;
+  }
+
+  & > div {
+    display: flex;
+
+    ion-icon {
+      margin-right: 5px;
+      align-self: center;
+      color: var(--ion-color-primary);
+    }
+
+    .date {
+      margin-left: auto;
+    }
+  }
+}

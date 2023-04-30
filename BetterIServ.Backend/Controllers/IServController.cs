@@ -12,7 +12,7 @@ public class IServController : ControllerBase {
     
     [HttpPost("login")]
     public async Task<ActionResult<AuthKeys>> GetAuthKeysV2([FromBody] Credentials credentials) {
-        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
+        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, Args = new []{"--no-sandbox"} });
         await using var page = await browser.NewPageAsync();
         await page.GoToAsync($"https://{credentials.Domain}/iserv/auth/login");
 
@@ -21,7 +21,7 @@ public class IServController : ControllerBase {
         await page.Keyboard.PressAsync("Tab");
         await page.Keyboard.TypeAsync(credentials.Password);
         await page.ClickAsync("body > div > main > div > div.panel-body > form > div.row > div:nth-child(1) > button");
-        await Task.Delay(500);
+        await Task.Delay(2000);
 
         var authKeys = new AuthKeys();
         var cookies = await page.GetCookiesAsync();
