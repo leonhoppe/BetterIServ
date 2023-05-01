@@ -6,6 +6,7 @@ import {IServService} from "../../api/iserv.service";
 import {Course, Lesson, Timetable} from "../../entities/course";
 import {WeekPipe} from "../../pipes/week.pipe";
 import {LessonComponent} from "../../components/lesson/lesson.component";
+import {StorageService} from "../../api/storage.service";
 
 @Component({
   selector: 'app-schedule',
@@ -26,20 +27,19 @@ export class SchedulePage implements OnInit {
   @ViewChild('courseModal') courseModal: IonModal;
   @ViewChild('tableModal') tableModal: IonModal;
 
-  constructor(public iserv: IServService) { }
+  constructor(public iserv: IServService, private storage: StorageService) { }
 
   async ngOnInit() {
     this.courses = (await this.iserv.getCoursesAndClass()).courses;
+    this.timetable = await this.storage.getItem("timetable");
 
-    if (localStorage.getItem("timetable") == undefined) {
+    if (this.timetable == undefined) {
       for (let day of ['mon', 'tue', 'wed', 'thu', 'fri']) {
         for (let i = 0; i < 10; i++) {
           this.timetable[day].push(undefined);
         }
       }
-      localStorage.setItem("timetable", JSON.stringify(this.timetable));
-    }else {
-      this.timetable = JSON.parse(localStorage.getItem("timetable"));
+      await this.storage.setItem("timetable", this.timetable);
     }
   }
 
@@ -71,7 +71,7 @@ export class SchedulePage implements OnInit {
       if (a.name > b.name) return 1;
       return 0;
     });
-    localStorage.setItem("courses", JSON.stringify(this.courses));
+    await this.storage.setItem("courses", JSON.stringify(this.courses));
   }
 
   public async updateOrCreateLesson(event: any) {
@@ -88,7 +88,7 @@ export class SchedulePage implements OnInit {
       this.timetable[data.day][data.time] = data.lesson;
     }
 
-    localStorage.setItem("timetable", JSON.stringify(this.timetable));
+    await this.storage.setItem("timetable", JSON.stringify(this.timetable));
     location.reload();
   }
 
@@ -120,11 +120,11 @@ export class SchedulePage implements OnInit {
     this.allCourses.push({short, name, id: short, color: this.getRandomColor()});
   }
 
-  public saveCourses(event: any) {
+  public async saveCourses(event: any) {
     if (event.detail.role != "confirm") return;
     this.courses = this.allCourses;
     delete this.allCourses;
-    localStorage.setItem("courses", JSON.stringify(this.courses));
+    await this.storage.setItem("courses", this.courses);
   }
 
 }

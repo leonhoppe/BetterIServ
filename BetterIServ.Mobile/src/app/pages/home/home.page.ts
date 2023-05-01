@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, Time} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import {IServService} from "../../api/iserv.service";
@@ -12,6 +12,7 @@ import {MailComponent} from "../../components/mail/mail.component";
 import {Router} from "@angular/router";
 import {Course, Lesson, Timetable} from "../../entities/course";
 import {LessonComponent} from "../../components/lesson/lesson.component";
+import {StorageService} from "../../api/storage.service";
 
 @Component({
   selector: 'app-home',
@@ -30,7 +31,7 @@ export class HomePage implements OnInit {
   public classData: {class: string, courses: Course[]};
   public lessons: Lesson[];
 
-  public constructor(public iserv: IServService, public mails: MailService, public units: UnitsService, public router: Router) {}
+  public constructor(public iserv: IServService, public mails: MailService, public units: UnitsService, public router: Router, private storage: StorageService) {}
 
   async ngOnInit() {
     this.today = new Date();
@@ -40,11 +41,17 @@ export class HomePage implements OnInit {
     const mailPromise = this.mails.getMails("INBOX", 0);
     const classPromise = this.iserv.getCoursesAndClass();
     const subsPromise = this.units.getSubstitutionPlan("today");
-    await Promise.all([mailPromise, classPromise, subsPromise]);
+    const timetablePromise = this.storage.getItem<Timetable>("timetable");
+    await Promise.all([mailPromise, classPromise, subsPromise, timetablePromise]);
 
     this.unreadMails = (await mailPromise).filter(mail => !mail.read);
     this.classData = await classPromise;
     let unitsData = await subsPromise;
+    const timetable = await timetablePromise;
+
+    if (scheduleDay != undefined && timetable != undefined) {
+      this.lessons = timetable[scheduleDay].filter(lesson => lesson != undefined);
+    }
 
     if (this.dateIsPast(unitsData.date, new Date())) {
       unitsData = await this.units.getSubstitutionPlan("tomorrow");
@@ -54,10 +61,6 @@ export class HomePage implements OnInit {
 
     if (this.classData.class.startsWith("Q")) {
       this.subs = this.subs.filter(subs => this.classData.courses.filter(course => course.id == subs.lesson).length > 0);
-    }
-
-    if (scheduleDay != undefined && localStorage.getItem("timetable")) {
-      this.lessons = (JSON.parse(localStorage.getItem("timetable")) as Timetable)[scheduleDay].filter(lesson => lesson != undefined);
     }
   }
 

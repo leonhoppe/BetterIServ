@@ -6,6 +6,7 @@ import {UnitsService} from "../../api/units.service";
 import {UnitsData} from "../../entities/substitution";
 import {IServService} from "../../api/iserv.service";
 import {SubstitutionComponent} from "../../components/substitution/substitution.component";
+import {StorageService} from "../../api/storage.service";
 
 @Component({
   selector: 'app-substitution',
@@ -22,12 +23,12 @@ export class SubstitutionPage implements OnInit {
   public currentClass: string;
   public filterByClasses: boolean = false;
 
-  constructor(public units: UnitsService, private iserv: IServService, private alerts: AlertController) {
-    this.currentClass = localStorage.getItem("class") || 'all';
-    this.filterByClasses = localStorage.getItem("filterByClasses") == "true";
-  }
+  constructor(public units: UnitsService, private iserv: IServService, private alerts: AlertController, private storage: StorageService) {}
 
   async ngOnInit() {
+    this.currentClass = await this.storage.getItem("class", false) || 'all';
+    this.filterByClasses = await this.storage.getItem("filterByClasses", false) == "true";
+
     if (!this.units.doesSchoolExist()) {
       const alert = await this.alerts.create({
         subHeader: "Fehler",
@@ -47,7 +48,7 @@ export class SubstitutionPage implements OnInit {
         this.courses.push(course.id);
       }
 
-      if (localStorage.getItem("filterByClasses") == null) {
+      if (await this.storage.getItem("filterByClasses") == undefined) {
         this.showOnlyCourses(true);
         this.filterByClasses = true;
 
@@ -69,14 +70,14 @@ export class SubstitutionPage implements OnInit {
 
   public changeClass(className: string) {
     this.currentClass = className;
-    localStorage.setItem("class", className);
+    this.storage.setItem("class", className);
 
     this.filterByClasses = false;
     this.showOnlyCourses(false);
   }
 
   public showOnlyCourses(toggle: boolean) {
-    localStorage.setItem("filterByClasses", toggle.toString());
+    this.storage.setItem("filterByClasses", toggle.toString());
   }
 
   public hasClass(course: string): boolean {

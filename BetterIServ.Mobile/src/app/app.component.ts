@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import {IServService} from "./api/iserv.service";
+import {StorageService} from "./api/storage.service";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -20,16 +21,16 @@ export class AppComponent {
     { title: 'Vertretungsplan', url: '/substitution', icon: 'list' },
   ];
 
-  constructor(public router: Router, public iserv: IServService) {
+  constructor(public router: Router, public iserv: IServService, private storage: StorageService) {
     if (localStorage.getItem("userdata") == null) {
       this.router.navigate(["login"]);
     }
   }
 
-  public logout() {
-    localStorage.clear();
+  public async logout() {
+    await this.storage.clear();
     this.iserv.logout();
-    this.router.navigate(["login"]);
+    await this.router.navigate(["login"]);
   }
 
 }

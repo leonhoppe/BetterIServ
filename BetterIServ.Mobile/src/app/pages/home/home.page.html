@@ -30,7 +30,7 @@
       <ion-card-title>Stundenplan</ion-card-title>
     </ion-card-header>
     <ion-card-content class="lesson-content">
-      <ion-card *ngIf="lessons == undefined">
+      <ion-card *ngIf="lessons?.length < 1">
         <ion-card-header>
           <ion-card-subtitle>Kein Unterricht</ion-card-subtitle>
         </ion-card-header>
@@ -48,7 +48,7 @@
       <ion-card-subtitle>{{subsDate?.toLocaleDateString()}}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <ion-card *ngIf="subs?.length == 0 && subs != undefined">
+      <ion-card *ngIf="subs?.length < 1">
         <ion-card-header>
           <ion-card-subtitle>Keine Vertretungen</ion-card-subtitle>
         </ion-card-header>
@@ -64,7 +64,7 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-card *ngIf="unreadMails?.length == 0">
+        <ion-card *ngIf="unreadMails?.length < 1">
           <ion-card-header>
             <ion-card-subtitle>Keine ungelesenen E-Mails</ion-card-subtitle>
           </ion-card-header>

@@ -8,6 +8,8 @@ import {Lesson} from "../entities/course";
 export class WeekPipe implements PipeTransform {
 
   transform(objects: Lesson[]): Lesson[] {
+    if (objects == undefined) return [];
+
     const week = this.getWeek(new Date()) % 2;
     const label = week == 0 ? "a" : "b";
     const result = [];

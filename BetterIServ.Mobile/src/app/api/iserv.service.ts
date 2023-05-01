@@ -4,15 +4,20 @@ import {Userdata, AuthKeys} from "../entities/userdata";
 import {firstValueFrom} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Course} from "../entities/course";
+import {StorageService} from "./storage.service";
 
 @Injectable({
   providedIn: 'root',
 })
 export class IServService {
 
-  public userdata?: Userdata;
+  public static userdata?: Userdata;
   public keys?: AuthKeys;
   public backend: string = environment.backend;
+
+  public get userdata(): Userdata {
+    return IServService.userdata;
+  }
 
   public courseNames: {[id: string]: string} = {
     ["Bi"]: "Biologie",
@@ -43,10 +48,10 @@ export class IServService {
     {name: "Rot", val: "danger"}
   ];
 
-  constructor(private client: HttpClient) {
+  constructor(private client: HttpClient, private storage: StorageService) {
     const data = localStorage.getItem("userdata");
     if (data != null) {
-      this.userdata = JSON.parse(data);
+      IServService.userdata = JSON.parse(data);
     }
 
     const keys = localStorage.getItem("keys");
@@ -57,15 +62,15 @@ export class IServService {
 
   public async login(email: string, password: string): Promise<boolean> {
     const split = email.split('@');
-    this.userdata = {
+    IServService.userdata = {
       username: split[0],
       domain: split[1],
       password
     };
 
     try {
-      const keys = await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/iserv/login", this.userdata));
-      localStorage.setItem("userdata", JSON.stringify(this.userdata));
+      const keys = await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/iserv/login", IServService.userdata));
+      localStorage.setItem("userdata", JSON.stringify(IServService.userdata));
       localStorage.setItem("keys", JSON.stringify(keys));
       return true;
     }catch (error) {
@@ -74,31 +79,29 @@ export class IServService {
   }
 
   public logout() {
-    delete this.userdata;
+    delete IServService.userdata;
     delete this.keys;
   }
 
   public async getKeys(): Promise<AuthKeys> {
-    const keys = await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/iserv/login", this.userdata));
+    const keys = await firstValueFrom(this.client.post<AuthKeys>(this.backend + "/iserv/login", IServService.userdata));
     localStorage.setItem("keys", JSON.stringify(keys));
     return keys;
   }
 
   public async getGroups(): Promise<string[]> {
     try {
-      return (await firstValueFrom(this.client.post<{value: string[]}>(this.backend + "/iserv/groups?domain=" + this.userdata.domain, this.keys))).value;
+      return (await firstValueFrom(this.client.post<{value: string[]}>(this.backend + "/iserv/groups?domain=" + IServService.userdata.domain, this.keys))).value;
     } catch {
       const keys = await this.getKeys();
-      return (await firstValueFrom(this.client.post<{value: string[]}>(this.backend + "/iserv/groups?domain=" + this.userdata.domain, keys))).value;
+      return (await firstValueFrom(this.client.post<{value: string[]}>(this.backend + "/iserv/groups?domain=" + IServService.userdata.domain, keys))).value;
     }
   }
 
   public async getCoursesAndClass(groups?: string[]): Promise<{class: string, courses: Course[]}> {
-    if (localStorage.getItem("courses") && localStorage.getItem("class")) {
-      const courses = JSON.parse(localStorage.getItem("courses")) as Course[];
-      const className = localStorage.getItem("class");
-      return {courses, class: className};
-    }
+    const courses = await this.storage.getItem<Course[]>("courses");
+    const className = await this.storage.getItem<string>("class", false);
+    if (courses != undefined && className != undefined) return {class: className, courses};
 
     if (groups == undefined) {
       groups = await this.getGroups();
@@ -115,7 +118,7 @@ export class IServService {
         result.class = grades[0].replace("Jahrgang ", "").toUpperCase();
       }
     }
-    localStorage.setItem("class", result.class);
+    await this.storage.setItem("class", result.class);
 
     for (let group of groups) {
       if (!group.includes(".") || !group.toLowerCase().startsWith("q")) continue;
@@ -141,7 +144,7 @@ export class IServService {
         return 0;
       });
 
-      localStorage.setItem("courses", JSON.stringify(courses));
+      await this.storage.setItem("courses", JSON.stringify(courses));
       return {class: result.class, courses};
     }
 
