@@ -1,0 +1,30 @@
+{
+  "name": "BetterIServ",
+  "short_name": "BetterIServ",
+  "theme_color": "#3880ff",
+  "background_color": "#121212",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/icon/favicon.ico",
+      "sizes": "256x256",
+      "type": "image/ico",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon/favicon512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon/favicon144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddCors(options => {
     options.AddPolicy("BetterIserv", policy => {
-        policy.WithOrigins("http://localhost", "http://localhost:8100")
+        policy.WithOrigins("https://school.leon-hoppe.de", "http://localhost:8100")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });

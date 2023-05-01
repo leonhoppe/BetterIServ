@@ -17,7 +17,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Willkommen {{iserv.userdata?.username}}</ion-card-title>
-      <ion-card-subtitle *ngIf="classData != undefined">
+      <ion-card-subtitle>
         Du hast {{unreadMails?.length || 0}} ungelesene E-Mails<br>
         <span>{{classData?.class.startsWith('Q') ? 'Jahrgang' : 'Klasse'}} {{classData?.class}}</span><br>
         {{dayName}} der {{today?.toLocaleDateString()}}
@@ -30,7 +30,7 @@
       <ion-card-title>Stundenplan</ion-card-title>
     </ion-card-header>
     <ion-card-content class="lesson-content">
-      <ion-card *ngIf="lessons == undefined && classData != undefined">
+      <ion-card *ngIf="lessons == undefined">
         <ion-card-header>
           <ion-card-subtitle>Kein Unterricht</ion-card-subtitle>
         </ion-card-header>
@@ -64,7 +64,7 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-card *ngIf="unreadMails?.length == 0 && unreadMails != undefined">
+        <ion-card *ngIf="unreadMails?.length == 0">
           <ion-card-header>
             <ion-card-subtitle>Keine ungelesenen E-Mails</ion-card-subtitle>
           </ion-card-header>
