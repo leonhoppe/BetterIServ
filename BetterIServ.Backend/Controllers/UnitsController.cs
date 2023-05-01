@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using BetterIServ.Backend.Entities;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
@@ -74,7 +75,7 @@ public class UnitsController : ControllerBase {
         }
         
         var date = html.DocumentNode.SelectNodes("//body/center[1]")[0].ChildNodes[1];
-        data.Date = DateTime.Parse(date.InnerHtml.Split(" ")[0]);
+        data.Date = DateTime.Parse(date.InnerHtml.Split(" ")[0], new CultureInfo("de-DE"));
 
         return data;
     }
