@@ -39,6 +39,7 @@ export class SchedulePage implements OnInit {
           this.timetable[day].push(undefined);
         }
       }
+
       await this.storage.setItem("timetable", this.timetable);
     }
   }

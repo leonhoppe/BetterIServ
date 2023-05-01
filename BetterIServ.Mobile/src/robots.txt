@@ -1,0 +1,4 @@
+﻿User-agent: *
+Allow: /
+
+Sitemap: https://school.leon-hoppe.de/sitemap.xml

@@ -183,7 +183,7 @@
     </div>
   </section>
 
-  <section class="timetable" *ngIf="!showCourses">
+  <section class="timetable" *ngIf="!showCourses && timetable != undefined">
     <div *ngFor="let day of ['mon', 'tue', 'wed', 'thu', 'fri']" class="ion-text-center">
       <ion-label *ngIf="day == 'mon'">Mo</ion-label>
       <ion-label *ngIf="day == 'tue'">Di</ion-label>

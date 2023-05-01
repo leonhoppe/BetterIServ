@@ -1,7 +1,7 @@
 {
   "name": "BetterIServ",
   "short_name": "BetterIServ",
-  "theme_color": "#3880ff",
+  "theme_color": "#121212",
   "background_color": "#121212",
   "display": "standalone",
   "orientation": "portrait",
