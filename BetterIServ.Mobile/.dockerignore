@@ -12,3 +12,4 @@ www
 
 # Ignore the .dockerignore file
 .dockerignore
+Dockerfile
