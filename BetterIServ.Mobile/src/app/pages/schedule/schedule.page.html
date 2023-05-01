@@ -6,7 +6,8 @@
     <ion-title>Stundenplan</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="onEditOrAdd()"><ion-icon ios="add-circle-outline" md="add-circle-sharp"></ion-icon></ion-button>
+      <ion-button *ngIf="courses?.length == 0 && showCourses" (click)="loadAllCourses(); defaultModal.present()"><ion-icon ios="arrow-down-circle-outline" md="arrow-down-circle-sharp" /></ion-button>
+      <ion-button (click)="onEditOrAdd()"><ion-icon ios="add-circle-outline" md="add-circle-sharp" /></ion-button>
 
       <ion-modal #courseModal (willDismiss)="updateOrCreateCourse($event)">
         <ng-template>
@@ -24,7 +25,7 @@
           <ion-content class="ion-padding course-content">
             <ion-item>
               <ion-label position="stacked">Farbe</ion-label>
-              <ion-select aria-label="Farbe" interface="action-sheet" [value]="iserv.colors[0].val" #color>
+              <ion-select aria-label="Farbe" interface="action-sheet" [value]="currentCourse?.color || iserv.colors[0].val" #color>
                 <ion-select-option *ngFor="let color of iserv.colors" [value]="color.val">
                   {{color.name}}
                 </ion-select-option>
@@ -104,6 +105,50 @@
             </ion-item>
 
             <ion-button *ngIf="currentLesson != undefined" color="danger" (click)="tableModal.dismiss(null, 'delete')">Stunde löschen</ion-button>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+      <ion-modal #defaultModal (didDismiss)="saveCourses($event)">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button (click)="defaultModal.dismiss(null, 'cancel')">Abbrechen</ion-button>
+              </ion-buttons>
+              <ion-title>Kurse hinzufügen</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="defaultModal.dismiss(null, 'confirm')">Fertig</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding course-content">
+            <ion-list>
+              <ion-item *ngFor="let course of allCourses; let i = index">
+                <ion-label>{{course.name}}</ion-label>
+
+                <ion-buttons slot="end">
+                  <ion-button color="danger" (click)="allCourses.splice(i, 1)"><ion-icon ios="close-outline" md="close-sharp" /></ion-button>
+                </ion-buttons>
+              </ion-item>
+
+              <ion-item>
+                <ion-input
+                  label="Kürzel"
+                  label-placement="floating"
+                  maxlength="2"
+                  style="width: 70px"
+                  #newShort
+                />
+                <ion-input
+                  label="Name"
+                  label-placement="floating"
+                  #newName
+                />
+                <ion-buttons slot="end">
+                  <ion-button (click)="addToAll(newName.value.toString(), newShort.value.toString()); newShort.value = ''; newName.value = ''"><ion-icon ios="add-outline" md="add-sharp" /></ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-list>
           </ion-content>
         </ng-template>
       </ion-modal>

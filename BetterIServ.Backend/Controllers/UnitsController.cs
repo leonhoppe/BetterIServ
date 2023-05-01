@@ -72,6 +72,9 @@ public class UnitsController : ControllerBase {
 
             data.Substitutions.Add(substitution);
         }
+        
+        var date = html.DocumentNode.SelectNodes("//body/center[1]")[0].ChildNodes[1];
+        data.Date = DateTime.Parse(date.InnerHtml.Split(" ")[0]);
 
         return data;
     }

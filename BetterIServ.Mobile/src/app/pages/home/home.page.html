@@ -45,6 +45,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Vertretungsplan</ion-card-title>
+      <ion-card-subtitle>{{subsDate?.toLocaleDateString()}}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <ion-card *ngIf="subs?.length == 0 && subs != undefined">

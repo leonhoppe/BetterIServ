@@ -26,6 +26,7 @@ export class HomePage implements OnInit {
   public today: Date;
   public dayName: string;
   public subs: Substitution[];
+  public subsDate: Date;
   public classData: {class: string, courses: Course[]};
   public lessons: Lesson[];
 
@@ -43,7 +44,13 @@ export class HomePage implements OnInit {
 
     this.unreadMails = (await mailPromise).filter(mail => !mail.read);
     this.classData = await classPromise;
-    this.subs = (await subsPromise).substitutions.filter(subs => subs.classes.includes(this.classData.class));
+    let unitsData = await subsPromise;
+
+    if (this.dateIsPast(unitsData.date, new Date())) {
+      unitsData = await this.units.getSubstitutionPlan("tomorrow");
+    }
+    this.subs = unitsData.substitutions?.filter(subs => subs.classes.includes(this.classData.class));
+    this.subsDate = unitsData.date;
 
     if (this.classData.class.startsWith("Q")) {
       this.subs = this.subs.filter(subs => this.classData.courses.filter(course => course.id == subs.lesson).length > 0);
@@ -52,6 +59,10 @@ export class HomePage implements OnInit {
     if (scheduleDay != undefined && localStorage.getItem("timetable")) {
       this.lessons = (JSON.parse(localStorage.getItem("timetable")) as Timetable)[scheduleDay].filter(lesson => lesson != undefined);
     }
+  }
+
+  private dateIsPast(first: Date, second: Date): boolean {
+    return first.setHours(0, 0, 0, 0) <= second.setHours(0, 0, 0, 0);
   }
 
 }

@@ -30,7 +30,9 @@ export class UnitsService {
   public async getSubstitutionPlan(date: "today" | "tomorrow"): Promise<UnitsData> {
     if (this.schools[this.iserv.userdata.domain] == undefined) return undefined;
     const url = this.schools[this.iserv.userdata.domain][date];
-    return await firstValueFrom(this.client.get<UnitsData>(this.iserv.backend + "/units/substitution?url=" + url));
+    const data = await firstValueFrom(this.client.get<UnitsData>(this.iserv.backend + "/units/substitution?url=" + url));
+    data.date = new Date(data.date);
+    return data;
   }
 
 }

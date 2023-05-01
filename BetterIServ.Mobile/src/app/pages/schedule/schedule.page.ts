@@ -21,6 +21,7 @@ export class SchedulePage implements OnInit {
   public currentCourse: Course;
   public timetable: Timetable = {mon: [], tue: [], wed: [], thu: [], fri: []};
   public currentLesson: {lesson: Lesson, day: string, time: number};
+  public allCourses: Course[];
 
   @ViewChild('courseModal') courseModal: IonModal;
   @ViewChild('tableModal') tableModal: IonModal;
@@ -101,6 +102,29 @@ export class SchedulePage implements OnInit {
     }
 
     return rooms[rooms.length - 1];
+  }
+
+  public loadAllCourses() {
+    this.allCourses = [];
+    for (let short of Object.keys(this.iserv.courseNames)) {
+      const name = this.iserv.courseNames[short];
+      this.allCourses.push({short, name, id: short, color: this.getRandomColor()});
+    }
+  }
+
+  public getRandomColor(): string {
+    return this.iserv.colors[Math.floor(Math.random() * this.iserv.colors.length)].val;
+  }
+
+  public addToAll(name: string, short: string) {
+    this.allCourses.push({short, name, id: short, color: this.getRandomColor()});
+  }
+
+  public saveCourses(event: any) {
+    if (event.detail.role != "confirm") return;
+    this.courses = this.allCourses;
+    delete this.allCourses;
+    localStorage.setItem("courses", JSON.stringify(this.courses));
   }
 
 }

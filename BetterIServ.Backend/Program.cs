@@ -1,3 +1,5 @@
+using PuppeteerSharp;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,6 +20,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
+    await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+    
     app.UseSwagger();
     app.UseSwaggerUI();
 }
