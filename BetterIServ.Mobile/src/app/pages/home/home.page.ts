@@ -53,7 +53,7 @@ export class HomePage implements OnInit {
       this.lessons = timetable[scheduleDay].filter(lesson => lesson != undefined);
     }
 
-    if (this.dateIsPast(unitsData.date, new Date())) {
+    if (this.dateIsPast(unitsData.date, this.today)) {
       unitsData = await this.units.getSubstitutionPlan("tomorrow");
     }
     this.subs = unitsData.substitutions?.filter(subs => subs.classes.includes(this.classData.class));
@@ -65,7 +65,7 @@ export class HomePage implements OnInit {
   }
 
   private dateIsPast(first: Date, second: Date): boolean {
-    return first.setHours(0, 0, 0, 0) <= second.setHours(0, 0, 0, 0);
+    return first.setHours(0, 0, 0, 0) < second.setHours(0, 0, 0, 0);
   }
 
 }

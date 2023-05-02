@@ -68,7 +68,7 @@ public class UnitsController : ControllerBase {
                 substitution.Classes = result;
             }
             else {
-                substitution.Classes = new[] { classes };
+                substitution.Classes = (classes?.Length == 3 ? new[] { "Q1", "Q2" } : new[] { classes })!;
             }
 
             data.Substitutions.Add(substitution);

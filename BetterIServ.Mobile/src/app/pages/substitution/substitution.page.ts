@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
 import {UnitsService} from "../../api/units.service";
-import {UnitsData} from "../../entities/substitution";
+import {Substitution, UnitsData} from "../../entities/substitution";
 import {IServService} from "../../api/iserv.service";
 import {SubstitutionComponent} from "../../components/substitution/substitution.component";
 import {StorageService} from "../../api/storage.service";
@@ -83,6 +83,25 @@ export class SubstitutionPage implements OnInit {
   public hasClass(course: string): boolean {
     if (!this.filterByClasses) return true;
     return this.courses.includes(course);
+  }
+
+  public addFakeSubstitution(event: any) {
+    if (event.detail.role != "confirm") return;
+    const data = event.detail.data as {course: string, type: string, lessons: string, teacher: string};
+    const sub: Substitution = {
+      classes: [this.currentClass],
+      lesson: data.course,
+      times: data.lessons.split(" - ").map(Number),
+      type: data.type,
+      teacher: data.teacher,
+      representative: "",
+      newLesson: "",
+      room: "---",
+      description: ""
+    };
+
+    this.data.substitutions.push(sub);
+    this.data.substitutions.sort((a, b) => a.times[0] < b.times[0] ? -1 : 1);
   }
 
 }

@@ -3,8 +3,49 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Vertretungsplan {{data?.date.toLocaleDateString()}}</ion-title>
+    <ion-title (click)="fakeModal.present()">Vertretungsplan {{data?.date.toLocaleDateString()}}</ion-title>
   </ion-toolbar>
+
+  <ion-modal #fakeModal (didDismiss)="addFakeSubstitution($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="fakeModal.dismiss(null, 'cancel')">Abbrechen</ion-button>
+          </ion-buttons>
+          <ion-title>Fake Vertretung</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="fakeModal.dismiss({type: type.value, course: course.value, lessons: lessons.value, teacher: teacher.value}, 'confirm')">Fertig</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding course-content">
+        <ion-item>
+          <ion-label position="stacked">Typ</ion-label>
+          <ion-select aria-label="Typ" interface="action-sheet" value="Entfall" #type>
+            <ion-select-option value="Entfall">Entfall</ion-select-option>
+            <ion-select-option value="Stillarbeit">Stillarbeit</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Kurs</ion-label>
+          <ion-select aria-label="Kurs" interface="action-sheet" [value]="courses[0]" #course>
+            <ion-select-option *ngFor="let course of courses" [value]="course">
+              {{course}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Stunden</ion-label>
+          <ion-input aria-label="Stunden" type="text" #lessons/>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Lehrer</ion-label>
+          <ion-input aria-label="Lehrer" type="text" #teacher/>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-header>
 
 <ion-content [fullscreen]="true">
