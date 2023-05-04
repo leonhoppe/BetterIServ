@@ -57,7 +57,7 @@ public class UnitsController : ControllerBase {
 
             if (!classes.StartsWith("Q")) {
                 string grade = new string(classes.ToCharArray().Where(char.IsNumber).ToArray());
-                if (string.IsNullOrEmpty(grade)) break;
+                if (string.IsNullOrEmpty(grade)) continue;
 
                 var subClasses = classes.Replace(grade, "").ToCharArray();
                 var result = new string[subClasses.Length];
