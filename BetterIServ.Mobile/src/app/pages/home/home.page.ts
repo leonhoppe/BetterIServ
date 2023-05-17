@@ -42,9 +42,8 @@ export class HomePage implements OnInit {
     const classPromise = this.iserv.getCoursesAndClass();
     const subsPromise = this.units.getSubstitutionPlan("today");
     const timetablePromise = this.storage.getItem<Timetable>("timetable");
-    await Promise.all([mailPromise, classPromise, subsPromise, timetablePromise]);
+    await Promise.all([classPromise, subsPromise, timetablePromise]);
 
-    this.unreadMails = (await mailPromise).filter(mail => !mail.read);
     this.classData = await classPromise;
     let unitsData = await subsPromise;
     const timetable = await timetablePromise;
@@ -62,6 +61,8 @@ export class HomePage implements OnInit {
     if (this.classData.class.startsWith("Q")) {
       this.subs = this.subs.filter(subs => this.classData.courses.filter(course => course.id == subs.lesson).length > 0);
     }
+
+    this.unreadMails = (await mailPromise).filter(mail => !mail.read);
   }
 
   private dateIsPast(first: Date, second: Date): boolean {
