@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
         volumes:
-          - /usr/local/bin/docker:/usr/bin/docker
+          - /usr/bin/docker:/usr/bin/docker
           - /var/run/docker.sock:/var/run/docker.sock
           
       - name: Build and Push
@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_IMAGE }}-frontend:latest
         volumes:
-          - /usr/local/bin/docker:/usr/bin/docker
+          - /usr/bin/docker:/usr/bin/docker
           - /var/run/docker.sock:/var/run/docker.sock
             
   
@@ -57,7 +57,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
         volumes:
-          - /usr/local/bin/docker:/usr/bin/docker
+          - /usr/bin/docker:/usr/bin/docker
           - /var/run/docker.sock:/var/run/docker.sock
 
       - name: Build and Push
@@ -72,5 +72,5 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_IMAGE }}-backend:latest
         volumes:
-          - /usr/local/bin/docker:/usr/bin/docker
+          - /usr/bin/docker:/usr/bin/docker
           - /var/run/docker.sock:/var/run/docker.sock
