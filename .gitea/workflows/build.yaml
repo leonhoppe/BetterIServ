@@ -5,8 +5,7 @@ env:
 
 on:
   push:
-    tags:
-      - '*'
+    branches: main
         
 jobs:
   frontend:
