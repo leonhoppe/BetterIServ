@@ -31,6 +31,8 @@ jobs:
           
       - name: Build and Push
         uses: docker/build-push-action@master
+        env:
+          ACTIONS_RUNTIME_TOKEN: '' # See https://gitea.com/gitea/act_runner/issues/119
         with:
           context: BetterIServ.Mobile
           file: ./Dockerfile
@@ -62,6 +64,8 @@ jobs:
 
       - name: Build and Push
         uses: docker/build-push-action@master
+        env:
+          ACTIONS_RUNTIME_TOKEN: '' # See https://gitea.com/gitea/act_runner/issues/119
         with:
           context: BetterIServ.Backend
           file: ./Dockerfile
