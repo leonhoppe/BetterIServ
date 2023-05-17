@@ -10,8 +10,6 @@ on:
 jobs:
   frontend:
     runs-on: ubuntu-latest
-    container:
-      image: node-18
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,6 +20,8 @@ jobs:
           registry: git.leon-hoppe.de
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
           
       - name: Build and Push
         uses: docker/build-push-action@v4
@@ -33,12 +33,12 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ env.DOCKER_IMAGE }}-frontend:latest
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
             
   
   backend:
     runs-on: ubuntu-latest
-    container:
-      image: node-18
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -49,6 +49,8 @@ jobs:
           registry: git.leon-hoppe.de
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
 
       - name: Build and Push
         uses: docker/build-push-action@v4
@@ -60,3 +62,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ env.DOCKER_IMAGE }}-backend:latest
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
