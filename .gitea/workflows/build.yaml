@@ -30,7 +30,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: &{{ env.DOCKER_IMAGE }}-frontend:latest
+          tags: ${{ env.DOCKER_IMAGE }}-frontend:latest
             
   
   backend:
@@ -55,4 +55,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: &{ { env.DOCKER_IMAGE } }-backend:latest
+          tags: ${{ env.DOCKER_IMAGE }}-backend:latest
