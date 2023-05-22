@@ -1,7 +1,7 @@
 ﻿name: build
 
 env:
-  DOCKER_IMAGE: git.leon-hoppe.de/leon.hoppe/betteriserv-frontend:latest
+  DOCKER_IMAGE: git.leon-hoppe.de/leon.hoppe/betteriserv
 
 on:
   push:
