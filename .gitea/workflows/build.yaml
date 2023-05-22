@@ -1,0 +1,51 @@
+﻿name: build
+
+env:
+  DOCKER_IMAGE: git.leon-hoppe.de/leon.hoppe/betteriserv-frontend:latest
+
+on:
+  push:
+    branches: main
+        
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    container:
+      image: catthehacker/ubuntu:act-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Login to Repo
+        uses: docker/login-action@v2
+        with:
+          registry: git.leon-hoppe.de
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build docker image
+        run: docker build -t ${{ env.DOCKER_IMAGE }}:frontend BetterIServ.Mobile/
+
+      - name: Push docker image
+        run: docker push ${{ env.DOCKER_IMAGE }}:frontend
+
+  build-backend:
+    runs-on: ubuntu-latest
+    container:
+      image: catthehacker/ubuntu:act-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Login to Repo
+        uses: docker/login-action@v2
+        with:
+          registry: git.leon-hoppe.de
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build docker image
+        run: docker build -t ${{ env.DOCKER_IMAGE }}:backend BetterIServ.Backend/
+
+      - name: Push docker image
+        run: docker push ${{ env.DOCKER_IMAGE }}:backend
