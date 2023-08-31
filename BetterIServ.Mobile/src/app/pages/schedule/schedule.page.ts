@@ -34,6 +34,14 @@ export class SchedulePage implements OnInit {
     this.timetable = await this.storage.getItem("timetable");
 
     if (this.timetable == undefined) {
+      this.timetable = {
+        mon: [],
+        tue: [],
+        wed: [],
+        thu: [],
+        fri: []
+      };
+
       for (let day of ['mon', 'tue', 'wed', 'thu', 'fri']) {
         for (let i = 0; i < 10; i++) {
           this.timetable[day].push(undefined);

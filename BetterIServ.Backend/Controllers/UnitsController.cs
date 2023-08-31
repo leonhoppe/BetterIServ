@@ -38,22 +38,34 @@ public class UnitsController : ControllerBase {
         }
 
         var substitutions = html.DocumentNode.SelectNodes("//body/center[1]")[0].ChildNodes[6];
-        for (int i = 4; i < substitutions.ChildNodes.Count; i++) {
+        var cols = new UnitsCollumns {
+            Classes = 0,
+            Times = 1,
+            Repre = 2,
+            Teacher = 3,
+            Lesson = 4,
+            Room = 5,
+            Type = 6,
+            Desc = 7
+        };
+        
+        for (int i = 1; i < substitutions.ChildNodes.Count; i++) {
             var node = substitutions.ChildNodes[i];
-            if (node.ChildNodes.Count < 9) continue;
+            if (node.ChildNodes.Count < 8) continue;
+            if (!node.ChildNodes[cols.Times].InnerText.Contains("-")) continue;
             
             var substitution = new Substitution {
-                Times = node.ChildNodes[1].InnerText.Split(" - ").Select(int.Parse).ToArray(),
-                Type = node.ChildNodes[2].InnerText,
-                Representative = node.ChildNodes[3].InnerText,
-                NewLesson = node.ChildNodes[4].InnerText,
-                Lesson = node.ChildNodes[5].InnerText,
-                Room = node.ChildNodes[6].InnerText,
-                Teacher = node.ChildNodes[7].InnerText,
-                Description = node.ChildNodes[9].InnerText
+                Times = node.ChildNodes[cols.Times].InnerText.Split(" - ").Select(int.Parse).ToArray(),
+                Type = node.ChildNodes[cols.Type].InnerText.Replace("Vtr. ohne Lehrer", "Stillarbeit"),
+                Representative = node.ChildNodes[cols.Repre].InnerText,
+                NewLesson = node.ChildNodes[cols.Lesson].InnerText,
+                Lesson = node.ChildNodes[cols.Lesson].InnerText,
+                Room = node.ChildNodes[cols.Room].InnerText,
+                Teacher = node.ChildNodes[cols.Teacher].InnerText,
+                Description = node.ChildNodes[cols.Desc].InnerText
             };
 
-            var classes = node.ChildNodes[0].InnerText;
+            var classes = node.ChildNodes[cols.Classes].InnerText;
 
             if (!classes.StartsWith("Q")) {
                 string grade = new string(classes.ToCharArray().Where(char.IsNumber).ToArray());

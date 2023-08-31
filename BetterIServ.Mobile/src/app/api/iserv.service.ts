@@ -118,17 +118,30 @@ export class IServService {
         result.class = grades[0].replace("Jahrgang ", "").toUpperCase();
       }
     }
+
+    switch (result.class) {
+      case "12":
+        result.class = "Q1";
+        break;
+
+      case "13":
+        result.class = "Q2";
+        break;
+    }
+
     await this.storage.setItem("class", result.class);
 
     for (let group of groups) {
       if (!group.includes(".") || !group.toLowerCase().startsWith("q")) continue;
-      result.courses.push(group.split(".")[1]);
+      result.courses.push(group.split(".")[1]
+        .replace("1", "")
+        .replace("2", ""));
     }
 
     if (result.class.startsWith("Q")) {
       const courses: Course[] = [];
       for (let course of result.courses) {
-        const short = course.substring(1, 3);
+        const short = course.substring(0, 2);
         const name = this.courseNames[short];
         if (name == undefined) continue;
         courses.push({

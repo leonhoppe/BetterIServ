@@ -82,7 +82,11 @@ export class SubstitutionPage implements OnInit {
 
   public hasClass(course: string): boolean {
     if (!this.filterByClasses) return true;
-    return this.courses.includes(course);
+    if (course == "&nbsp;") return true;
+
+    return this.courses.includes(course
+      .replace("1", "")
+      .replace("2", ""));
   }
 
   public addFakeSubstitution(event: any) {
