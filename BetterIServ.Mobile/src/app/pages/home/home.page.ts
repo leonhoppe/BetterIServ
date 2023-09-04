@@ -60,7 +60,7 @@ export class HomePage implements OnInit {
     this.subsDate = unitsData.date;
 
     if (this.classData.class.startsWith("Q")) {
-      this.subs = this.subs.filter(subs => this.classData.courses.filter(course => course.id == subs.lesson).length > 0);
+      this.subs = this.subs.filter(subs => this.classData.courses.filter(course => course.id == subs.lesson.replace("1", "").replace("2", "")).length > 0);
     }
 
     this.unreadMails = (await mailPromise).filter(mail => !mail.read);
