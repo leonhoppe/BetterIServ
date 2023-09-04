@@ -14,6 +14,8 @@ import {Router} from "@angular/router";
 })
 export class LoginPage implements OnInit {
 
+  public showLoading: boolean = false;
+
   constructor(private iservApi: IServService, private router: Router, private alerts: AlertController) { }
 
   ngOnInit() {
@@ -21,12 +23,16 @@ export class LoginPage implements OnInit {
 
   public async onLogin(email?: string, password?: string) {
     if (email == undefined || password == undefined) return;
+    if (this.showLoading) return;
+    this.showLoading = true;
 
     if (await this.iservApi.login(email, password)) {
       setTimeout(async () => {
+        this.showLoading = false;
         await this.router.navigate(['home']);
       }, 500);
     }else {
+      this.showLoading = false;
       const alert = await this.alerts.create({
         header: "Fehler",
         message: "Die angegebenen Logindaten sind nicht korrekt!",

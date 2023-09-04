@@ -1,10 +1,9 @@
-import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {IonicModule, IonModal} from '@ionic/angular';
 import {IServService} from "../../api/iserv.service";
 import {Course, Lesson, Timetable} from "../../entities/course";
-import {WeekPipe} from "../../pipes/week.pipe";
 import {LessonComponent} from "../../components/lesson/lesson.component";
 import {StorageService} from "../../api/storage.service";
 
@@ -13,7 +12,7 @@ import {StorageService} from "../../api/storage.service";
   templateUrl: './schedule.page.html',
   styleUrls: ['./schedule.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, WeekPipe, LessonComponent]
+  imports: [IonicModule, CommonModule, FormsModule, LessonComponent]
 })
 export class SchedulePage implements OnInit {
 
@@ -27,7 +26,7 @@ export class SchedulePage implements OnInit {
   @ViewChild('courseModal') courseModal: IonModal;
   @ViewChild('tableModal') tableModal: IonModal;
 
-  constructor(public iserv: IServService, private storage: StorageService) { }
+  constructor(public iserv: IServService, public storage: StorageService) { }
 
   async ngOnInit() {
     this.courses = (await this.iserv.getCoursesAndClass()).courses;

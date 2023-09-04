@@ -42,14 +42,15 @@ export class HomePage implements OnInit {
     const classPromise = this.iserv.getCoursesAndClass();
     const subsPromise = this.units.getSubstitutionPlan("today");
     const timetablePromise = this.storage.getItem<Timetable>("timetable");
-    await Promise.all([classPromise, subsPromise, timetablePromise]);
+    await Promise.all([classPromise, subsPromise]);
 
     this.classData = await classPromise;
     let unitsData = await subsPromise;
+
     const timetable = await timetablePromise;
 
     if (scheduleDay != undefined && timetable != undefined) {
-      this.lessons = timetable[scheduleDay].filter(lesson => lesson != undefined);
+      this.lessons = timetable[scheduleDay].filter(lesson => lesson != undefined && this.storage.isLessonThisWeek(lesson));
     }
 
     if (this.dateIsPast(unitsData.date, this.today)) {

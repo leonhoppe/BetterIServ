@@ -67,7 +67,7 @@
   <section *ngIf="showNews">
     <ion-card *ngFor="let info of data?.notifications">
       <ion-card-content>
-        <ion-label [innerHtml]="info" style="color: #FFF"/>
+        <ion-label [innerHtml]="info" style="color: var(--ion-text-color)"/>
       </ion-card-content>
     </ion-card>
   </section>

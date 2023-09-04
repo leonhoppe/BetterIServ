@@ -49,10 +49,10 @@ public class UnitsController : ControllerBase {
             Desc = 7
         };
         
-        for (int i = 1; i < substitutions.ChildNodes.Count; i++) {
+        for (int i = 2; i < substitutions.ChildNodes.Count; i++) {
             var node = substitutions.ChildNodes[i];
             if (node.ChildNodes.Count < 8) continue;
-            if (!node.ChildNodes[cols.Times].InnerText.Contains("-")) continue;
+            if (node.ChildNodes[cols.Times].InnerText.Contains("//")) continue;
             
             var substitution = new Substitution {
                 Times = node.ChildNodes[cols.Times].InnerText.Split(" - ").Select(int.Parse).ToArray(),

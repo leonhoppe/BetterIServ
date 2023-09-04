@@ -191,7 +191,7 @@
       <ion-label *ngIf="day == 'thu'">Do</ion-label>
       <ion-label *ngIf="day == 'fri'">Fr</ion-label>
 
-      <lesson *ngFor="let lesson of timetable[day] | week; let i = index" [ngClass]="{'hide': lesson == undefined}" (click)="onEditOrAdd(undefined, {lesson, day, time: i})" [lesson]="lesson" [courses]="courses" />
+      <lesson *ngFor="let lesson of timetable[day]; let i = index" [ngClass]="{'hide': lesson == undefined, 'off-week': !storage.isLessonThisWeek(lesson)}" (click)="onEditOrAdd(undefined, {lesson, day, time: i})" [lesson]="lesson" [courses]="courses" />
     </div>
   </section>
 </ion-content>

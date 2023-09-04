@@ -28,7 +28,7 @@ export class AppComponent {
   }
 
   public async logout() {
-    await this.storage.clear();
+    localStorage.clear();
     this.iserv.logout();
     await this.router.navigate(["login"]);
   }
