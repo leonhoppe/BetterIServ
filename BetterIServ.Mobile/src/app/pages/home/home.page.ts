@@ -13,6 +13,7 @@ import {Router} from "@angular/router";
 import {Course, Lesson, Timetable} from "../../entities/course";
 import {LessonComponent} from "../../components/lesson/lesson.component";
 import {StorageService} from "../../api/storage.service";
+import {time} from "ionicons/icons";
 
 @Component({
   selector: 'app-home',
@@ -42,7 +43,7 @@ export class HomePage implements OnInit {
     const classPromise = this.iserv.getCoursesAndClass();
     const subsPromise = this.units.getSubstitutionPlan("today");
     const timetablePromise = this.storage.getItem<Timetable>("timetable");
-    await Promise.all([classPromise, subsPromise]);
+    await Promise.all([classPromise, subsPromise, timetablePromise]);
 
     this.classData = await classPromise;
     let unitsData = await subsPromise;
@@ -50,7 +51,7 @@ export class HomePage implements OnInit {
     const timetable = await timetablePromise;
 
     if (scheduleDay != undefined && timetable != undefined) {
-      this.lessons = timetable[scheduleDay].filter(lesson => lesson != undefined && this.storage.isLessonThisWeek(lesson));
+      this.lessons = timetable[scheduleDay].filter((lesson: Lesson) => lesson != undefined && this.storage.isLessonThisWeek(lesson));
     }
 
     if (this.dateIsPast(unitsData.date, this.today)) {

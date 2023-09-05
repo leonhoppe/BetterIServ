@@ -17,7 +17,7 @@ export class StorageService {
       const data = await firstValueFrom(this.client.get<{value: string}>(environment.backend + `/storage?user=${IServService.userdata.username}&item=${item}`));
 
       if (isJson) return JSON.parse(data.value) as T;
-      else return data.value as T;
+      return data.value as T;
     }catch {
       return defaultValue;
     }

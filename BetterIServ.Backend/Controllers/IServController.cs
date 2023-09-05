@@ -64,6 +64,7 @@ public class IServController : ControllerBase {
 
         var list = html.DocumentNode.SelectSingleNode("//body/div/div[2]/div[3]/div/div/div[2]/div/div/div/div/ul[1]");
         var courses = new List<string>();
+        if (list?.ChildNodes == null) return new SingleResult<string[]> { Value = Array.Empty<string>() };
         foreach (var child in list.ChildNodes) {
             if (child.ChildNodes.Count < 1) continue;
             courses.Add(child.ChildNodes[0].InnerText);

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Text;
+using Aspose.Email.Clients;
 using Aspose.Email.Clients.Imap;
 using BetterIServ.Backend.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,7 @@ public class MailController : ControllerBase {
     [HttpPost("list/{page}")]
     public async Task<ActionResult<MailContent[]>> GetMails([FromBody] Credentials credentials, [FromQuery] string folder, [FromRoute] int page) {
         using var client = new ImapClient($"imap.{credentials.Domain}", credentials.Username, credentials.Password);
+        if (client.ConnectionState != ConnectionState.Open) return Array.Empty<MailContent>();
         await client.SelectFolderAsync(folder);
 
         var messages = await client.ListMessagesByPageAsync(20, page, new PageSettingsAsync());
