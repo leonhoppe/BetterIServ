@@ -39,10 +39,10 @@ export class HomePage implements OnInit {
     this.dayName = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"][this.today.getDay()];
     const scheduleDay = [undefined, "mon", "tue", "wed", "thu", "fri", undefined][this.today.getDay()];
 
-    const mailPromise = this.mails.getMails("INBOX", 0);
     const classPromise = this.iserv.getCoursesAndClass();
     const subsPromise = this.units.getSubstitutionPlan("today");
     const timetablePromise = this.storage.getItem<Timetable>("timetable");
+    const mailPromise = this.mails.getMails("INBOX", 0);
     await Promise.all([classPromise, subsPromise, timetablePromise]);
 
     this.classData = await classPromise;
@@ -60,7 +60,7 @@ export class HomePage implements OnInit {
     this.subs = unitsData.substitutions?.filter(subs => subs.classes.includes(this.classData.class));
     this.subsDate = unitsData.date;
 
-    if (this.classData.class.startsWith("Q")) {
+    if (this.classData.class?.startsWith("Q")) {
       this.subs = this.subs.filter(subs => this.classData.courses.filter(course => course.id == subs.lesson.replace("1", "").replace("2", "")).length > 0);
     }
 
