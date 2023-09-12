@@ -16,9 +16,8 @@ public class StorageController : ControllerBase {
         var file = new FileInfo($"/data/{user}/{item}.json");
         
         if (file.Directory?.Exists != true) file.Directory?.Create();
-
-        await using var stream = file.Exists ? file.OpenWrite() : file.Create();
-        await stream.WriteAsync(Encoding.UTF8.GetBytes(data));
+        await System.IO.File.WriteAllTextAsync(file.FullName, data, Encoding.UTF8);
+        
         return Ok();
     }
 
